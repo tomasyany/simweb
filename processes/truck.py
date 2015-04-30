@@ -10,7 +10,7 @@ class Truck(object):
         """Constructor for the Truck process."""
 
         self.env = env
-        self.action = env.process(self.run())
+        
         self.truck_id = truck_id
 
         self.has_failure = False
