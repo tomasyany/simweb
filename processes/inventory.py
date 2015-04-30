@@ -3,6 +3,11 @@
 from simpy import Container
 
 class Inventory(object):
+    """An inventory has an initial stock for each of the components.
+
+    Each time a component is retrieve from the inventory, it has to be asked
+    for reposition. We call this politic one-to-one.
+    """
 
     def __init__(self, env, initial_stock, components):
         self.enf = env
