@@ -4,8 +4,9 @@ from simpy import Container
 
 class Inventory(object):
 
-    def __init__(self, env, initial_capacity, components):
-        self.stock = [Container(env, capacity=initial_capacity)
+    def __init__(self, env, initial_stock, components):
+        self.enf = env
+        self.stock = [Container(env, capacity=initial_stock)
                         for i in range(components)]
 
     def add_comp(component_id):
