@@ -5,12 +5,18 @@ from numpy.random import normal
 from simpy import Interrupt
 
 class Truck(object):
+    """A truck is represented as a process. 
+
+    It has a time to fail, a time to next maintenance.
+    It can be in four different states: in use, stand-by, at workshop,
+    in the queue for the workshop.
+    """
 
     def __init__ (self, env, truck_id):
         """Constructor for the Truck process."""
 
         self.env = env
-        
+
         self.truck_id = truck_id
 
         self.has_failure = False
@@ -18,6 +24,7 @@ class Truck(object):
 
         self.in_use = True
         self.in_standby = False
+        self.in_queue = False
         self.in_workshop = False
 
         print ("Truck number "+str(self.truck_id)+" has entered simulation.")
