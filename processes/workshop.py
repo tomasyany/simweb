@@ -1,6 +1,6 @@
 """This class describes the workshop as a resource."""
 
-from simpy import Resource
+from simpy import PriorityResource
 
 class Workshop (object):
     """A workshop has a limited number of parking spots (WORKSHOP_CAPACITY) to 
@@ -14,7 +14,7 @@ class Workshop (object):
     def __init__(self, env, workshop_capacity):
         # TODO = add repair/maintain time
         self.env = env
-        self.spot = Resource(env, workshop_capacity)
+        self.spot = PriorityResource(env, workshop_capacity)
 
     def repair (self, truck):
         """The repair process. It takes a truck process and repairs it."""
