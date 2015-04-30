@@ -23,7 +23,7 @@ class Workshop (object):
         yield self.env.timeout(repair_time)
 
 
-    def repair (self, truck):
+    def maintain (self, truck):
         """The maintain process. It takes a truck process and performs 
         a maintenance."""
         
