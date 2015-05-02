@@ -1,12 +1,10 @@
 """The app runs from here."""
 
 import simpy
-import numpy
-
-from truck import Truck
-from workshop import Workshop
+from processes.workshop import Workshop
 from random_generator import RandomTime
-from fleet import Fleet
+from processes.fleet import Fleet
+# from plotter.console_printer import ConsolePrinter as printer
 
 
 # Constants
@@ -27,6 +25,7 @@ SIMULATION_HORIZON = 1000
 def main():
     """Main function to be runned."""
 
+<<<<<<< HEAD
     printer.welcome() # Welcome message
 
     env = simpy.Environment()
