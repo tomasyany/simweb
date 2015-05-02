@@ -72,13 +72,17 @@ class Truck(object):
     """ The run process. The truck waits to be activated. Then it works until one of its components
     triggers the fail event and the truck goes off. After this, the truck goes to the Workshop queue 
     and waits until the repair event is triggered. """
+
         while True:
             yield self.activate_event
             self.activate_event = self.env.event()
             self.standby_time += self.env.now-self.repair_time
             start_time = self.env.now
+
             print('Truck # %d started working at %d' %(self.id, self.env.now))
+
             yield self.fail_event
+
             self.fail_event = self.env.event()
             self.working_time +=self.env.now-start_time
             self.failure()
@@ -86,15 +90,19 @@ class Truck(object):
             self.fleet.active_trucks.remove(self)
             self.fleet.off_trucks.append(self)
             Workshop.Queue.append(self)
+
             if Workshop.Idle != []:
                 Workshop.Idle[0].required.succeed()
+
             yield self.repair_event
+
             self.repair_event = self.env.event()
             self.off_time += self.env.now - failure_time
             self.repair_time = self.env.now
 
     def failure(self):
         print('Truck # %d stopped working at %d' % (self.id, self.env.now))
+        
         if self.fleet.stand_by_trucks != []:
             truck = self.fleet.stand_by_trucks.pop(0)
             truck.activate_event.succeed()
