@@ -25,7 +25,19 @@ SIM_TIME = 20 # Simulation horizon
 def main():
     """Main function to be runned."""
 
-    env = simpy.Environment()
+    printer.welcome() #Welcome message
+
+    trucks = [Truck(env, i) for i in range (TRUCKS_AMOUNT)]
+    workshop = Workshop(env, WORKSHOP_CAPACITY)
+    inventory = Inventory(env, INITIAL_STOCK)
+
+    # env = simpy.Environment()
+
+    # while env.peek() < time_to_run:
+    #     printer.step(env.now, step)
+    #     env.step()
+
+
 
 if __name__ == "__main__":
     main()
