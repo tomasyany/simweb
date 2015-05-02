@@ -14,7 +14,6 @@ class Truck(object):
 
     def __init__ (self, env, truck_id):
         """Constructor for the Truck process."""
-
         self.env = env
 
         self.truck_id = truck_id
@@ -79,7 +78,7 @@ class Truck(object):
             self.standby_time += self.env.now-self.repair_time
             start_time = self.env.now
 
-            print('Truck # %d started working at %d' %(self.id, self.env.now))
+            print('Truck # %d started working at %d' %(self.truck_id, self.env.now))
 
             yield self.fail_event
 
@@ -101,14 +100,9 @@ class Truck(object):
             self.repair_time = self.env.now
 
     def failure(self):
-        print('Truck # %d stopped working at %d' % (self.id, self.env.now))
-        
+        print('Truck # %d stopped working at %d' % (self.truck_id, self.env.now))
+
         if self.fleet.stand_by_trucks != []:
             truck = self.fleet.stand_by_trucks.pop(0)
             truck.activate_event.succeed()
             self.fleet.active_trucks.append(truck)
-
-
-
-            
-            
