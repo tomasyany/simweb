@@ -27,7 +27,7 @@ SIMULATION_HORIZON = 1000
 def main():
     """Main function to be runned."""
 
-    printer.welcome() #Welcome message
+    printer.welcome() # Welcome message
 
     env = simpy.Environment()
     # lifetime, repair time and inventory replacement time distributions for each distribution
@@ -40,7 +40,7 @@ def main():
     fleet = Fleet(1,c,TRUCKS_AMOUNT,TRUCKS_USE,env)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
-        
+
     env.run(until=SIMULATION_HORIZON)
 
 if __name__ == "__main__":
