@@ -6,10 +6,11 @@ import simpy
 
 class Fleet(object):
 
-    def __init__(self, id,component_distributions,n_trucks,design_number,env):
+    def __init__(self, fleet_id,component_distributions,n_trucks,design_number,
+                 env):
         """The contructor of the Fleet class."""
 
-        self.fleet_id = id
+        self.fleet_id = fleet_id
         # n_trucks is the total amount of trucks in this fleet
         self.n_trucks = n_trucks
         self.env = env    # the simpy environment
