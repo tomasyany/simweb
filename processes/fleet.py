@@ -1,13 +1,14 @@
 """The fleet class. This represents a fleet of trucks."""
 
-from truck import Truck
-from component import Component
+from processes.truck import Truck
+from processes.component import Component
 import simpy
 
 class Fleet(object):
 
     def __init__(self, id,component_distributions,n_trucks,design_number,env):
-	"""The contructor of the Fleet class."""
+        """The contructor of the Fleet class."""
+
         self.fleet_id = id
         self.n_trucks = n_trucks
         self.env = env

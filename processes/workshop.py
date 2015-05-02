@@ -1,68 +1,75 @@
-"""This class describes the workshop as a resource."""
-
-from simpy import PriorityResource
-
-class Workshop (object):
-    """A workshop has a limited number of parking spots (WORKSHOP_CAPACITY) to 
-    repair/maitain trucks in parallel.
-
-    Trucks have to request one of the spots. When they got one, the repair/
-    maintain process can start and they'll will wait an amount of time for it 
-    to finish.
-    """
-
-    def __init__(self, env, workshop_capacity):
-        # TODO = add repair/maintain time
-        self.env = env
-        self.spot = PriorityResource(env, workshop_capacity)
-
-    def repair (self, truck):
-        """The repair process. It takes a truck process and repairs it."""
-
-        repair_time = #TODO
-        yield self.env.timeout(repair_time)
+"""This class describes the workshop as a process"""
 
 
-    def maintain (self, truck):
-        """The maintain process. It takes a truck process and performs 
-        a maintenance."""
-        
-        maint_time = #TODO
-        yield self.env.timeout(maint_time)
+class Workshop(object):
+    """Each Workshop represents a place where a truck can be repaired.
+    Workshops remain idle until they are required by incoming trucks,
+    then they stay busy until no more trucks are waiting to be repaired.
+        """
 
-    next_id = 1 # for indexing different workshops
-    Idle = [] # idle workshops
-    Busy = [] # busy workshops
-    Queue = [] # trucks waiting to be repaired 
-    Ndone = 0 # total amount of repaired trucks 
+    next_id = 1    # for indexing different workshops
+    Idle = []    # idle workshops
+    Busy = []    # busy workshops
+    Queue = []    # trucks waiting to be repaired
+    Ndone = 0    # total amount of repaired trucks
+
     def __init__(self,env):
-    """ Constructor for the Workshop process"""
-        self.env = env
+        """ Constructor for the Workshop process"""
+        self.env = env    # the simpy environment
+
+        # Set a different id for each workshop
         self.id = Workshop.next_id
         Workshop.next_id += 1
-        self.action = env.process(self.run()) 
+
+        # Tell simpy to add this workshop's run() process
+        self.action = env.process(self.run())
+
         Workshop.Idle.append(self) # all workshops start as idle
-        self.required = env.event() # the event when this workshop is required by an incoming truck
+
+        # The required event is triggered when this workshop is idle and
+        # there is an incoming repair request
+        self.required = env.event()
 
     def run(self):
-    """ The run process. It waits until the workshop is required. 
-    Then the workshop works until there are no trucks left in the queue"""
+        """ The run process.
+        1) Wait until a repair job is required
+        2) Work while there are trucks in the queue
+        3) Turn idle again
+        """
         while True:
-            yield self.required # tell the workshop it's been required
+            # Step 1: wait until the required event has been triggered
+            yield self.required
             self.required = self.env.event()
-            Workshop.Idle.remove(self) 
+            # Remove this workshop from the idle list
+            Workshop.Idle.remove(self)
             Workshop.Busy.append(self)
-            while Workshop.Queue != []: 
+
+            # Step 2
+            while Workshop.Queue != []:
+                # get the first truck in the queue
                 truck = Workshop.Queue.pop(0)
-                yield self.env.timeout(truck.repair_time) # wait until the repair time has elapsed
+                # wait for the repair job to be done
+                yield self.env.timeout(truck.repair_time)
                 print('Truck # %d was repaired at %d' %(truck.id,self.env.now))
-                truck.repair_event.succeed() # tell the truck it has been repaired
+                # Trigger the repair event: it tells the truck it's been
+                # repaired
+                truck.repair_event.succeed()
+                # increase the amounts of done jobs
                 Workshop.Ndone += 1
-                truck.fleet.off_trucks.remove(truck) 
-                if len(truck.fleet.active_trucks) < truck.fleet.design_number: # whether the repaired truck goes working or stand-by
-                    truck.activate_event.succeed() # tell the truck it has become active (working)
+                # remove the repaired truck from the off list
+                truck.fleet.off_trucks.remove(truck)
+
+                # check whether the repaired has go active or stand-by
+                if len(truck.fleet.active_trucks) < truck.fleet.design_number:
+                    # if there are not enough active trucks then the repaired
+                    #  truck is activated immediately
+                    truck.activate_event.succeed()    #trigger the
+                    # activate_event
                     truck.fleet.active_trucks.append(truck)
                 else:
                     truck.fleet.stand_by_trucks.append(truck)
-            Workshop.Busy.remove(self) # there are no more trucks in the queue so the workshop becomes idle again
+
+            # Step 3: Once all repair jobs have been done the workshop turns
+            # idle again
+            Workshop.Busy.remove(self)
             Workshop.Idle.append(self)
