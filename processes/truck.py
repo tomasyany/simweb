@@ -1,6 +1,8 @@
 """Process that represent a truck entity"""
 
 from processes.workshop import Workshop
+
+
 class Truck(object):
     """ A truck is represented as a process. It has components that
     may fail and thus cause the truck to need reparation.
@@ -19,8 +21,9 @@ class Truck(object):
         self.fleet = fleet     # The fleet this truck belongs to
         self.inventory = inventory
 
-        # Tell simpy to add this truck's run() process
+        # Tell simpy to add this truck's run() and check_component() processes
         self.action = env.process(self.run())
+        self.check = env.process(self.check_component())
 
         # The following are events that tell us when the truck has failed,
         # when it has been repaired and when it has been activated (it has
@@ -46,7 +49,6 @@ class Truck(object):
         self.off_time = 0
         # the total amount of time this truck is in stand-by
         self.standby_time = 0
-
 
         # this is the time required to be repaired (it may change each time
         # this truck fails)
@@ -86,11 +88,11 @@ class Truck(object):
             self.failure()    # call the failure method
             failure_time = self.env.now # update the last failure time
 
-            #Step 3: Remove the truck from the active list and send it to the
-            #  Workshop's queue
+            # Step 3: Remove the truck from the active list and add it to the
+            # off list
             self.fleet.active_trucks.remove(self)
             self.fleet.off_trucks.append(self)
-            Workshop.Queue.append(self)
+
             # If there are any idle workshop we tell one of them that it's
             # been required for a repair process
             if Workshop.Idle != []:
@@ -107,9 +109,24 @@ class Truck(object):
         # The failure method. It checks whether there are trucks in stand-by
         # to replace the failing truck
         print('Truck # %d stopped working at %d' % (self.id, self.env.now))
+        # Send the truck to the workshop's queue
+        Workshop.Queue_2.append(self)
+        print('Truck # %d has entered queue 2 at %d' % (self.id, self.env.now))
         self.inventory.request_component(self)
         if self.fleet.stand_by_trucks != []:
             truck = self.fleet.stand_by_trucks.pop(0)
             # Trigger the activate_event of new truck
             truck.activate_event.succeed()
             self.fleet.active_trucks.append(truck)
+
+    def check_component(self):
+        # Check whether the replacement component has been provided in order
+        # to take the truck from Queue_2 to Queue_1
+        while True:
+            yield self.fail_event
+            yield self.got_component
+            if self in Workshop.Queue_2:
+                Workshop.Queue_2.remove(self)
+                Workshop.Queue_1.append(self)
+                print('Truck # %d has entered queue 1 at %d' % (self.id,
+                      self.env.now))
