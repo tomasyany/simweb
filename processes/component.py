@@ -17,7 +17,7 @@ class Component(object):
 
     next_id = 1
     def __init__(self,env,truck,lifetime_distribution,repairtime_distribution,
-                 replacement_distribution):
+                 replacement_distribution, component_type):
         """The constructor of the Component class."""
         self.truck = truck    # The parent truck
 
@@ -39,6 +39,9 @@ class Component(object):
 
         # We tell simpy to add this component's run() process
         self.action = env.process(self.run())
+
+        #Component type is an integer that defines the kind of component
+        self.type = component_type
 
     def run(self):
         """
@@ -69,6 +72,8 @@ class Component(object):
 
                 self.truck.comp_inventory_time = self.distreplacement.getInstance()
                 self.truck.comp_repair_time = self.distrepair.getInstance()
+                self.truck.comp_type = self.type
+
                 for c in self.truck.components:    # interrupt all components
                     if c.id != self.id:
                         c.action.interrupt()

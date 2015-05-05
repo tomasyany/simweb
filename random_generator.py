@@ -5,6 +5,7 @@ class RandomTime(object):
     def __init__(self,distribution,*parameters):
         self.dist = distribution
         self.params = parameters
+
     def getInstance(self):
         dist = self.dist
         p = self.params

@@ -6,8 +6,9 @@ import simpy
 
 class Fleet(object):
 
-    def __init__(self, fleet_id,component_distributions,n_trucks,design_number,
-                 env):
+    def __init__(self, fleet_id,component_distributions,type_list,n_trucks,
+                 design_number,
+                 env,inventory):
         """The contructor of the Fleet class."""
 
         self.fleet_id = fleet_id
@@ -22,18 +23,21 @@ class Fleet(object):
         self.stand_by_trucks = []    # list containg the trucks in stand-by
         self.off_trucks = []    # list contaning the trucks in the repair
         # process
+        self.inventory = inventory
 
         # Create n_trucks and add them to active_trucks or to stand_by_trucks
         for i in range(n_trucks):
             # we create a new truck
-            truck = Truck(env, 1000*self.fleet_id+truck_id, None, self)
+            truck = Truck(env, 1000*self.fleet_id+truck_id, None, self,
+                          self.inventory)
             truck_id += 1
             # for each truck we create a list containing its components
             components = []
             # component_distributions is a list in which each element is a
             # list of three RandomTime objects
-            for c in component_distributions:
-                components.append(Component(env,truck,c[0],c[1],c[2]))
+            for idx, c in enumerate(component_distributions):
+                components.append(Component(env,truck,c[0],c[1],c[2],
+                                            type_list[idx]))
             truck.components = components
 
             # check whether the created truck is activated or not

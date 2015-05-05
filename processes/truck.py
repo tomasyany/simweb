@@ -10,13 +10,14 @@ class Truck(object):
 
     repair_time = 0   # time of last reparation = 0 by default
 
-    def __init__(self,env,t_id,components,fleet):
+    def __init__(self,env,t_id,components,fleet,inventory):
         """" Constructor for the Truck process"""
         # components is a list containing all the components of this truck
         self.components = components
         self.env = env    # simpy environment
         self.id = t_id    # truck id
         self.fleet = fleet     # The fleet this truck belongs to
+        self.inventory = inventory
 
         # Tell simpy to add this truck's run() process
         self.action = env.process(self.run())
@@ -33,6 +34,9 @@ class Truck(object):
         # The repair event is triggered when the workshop is done with repair
         #  process
         self.repair_event = env.event()
+        # The got component event is triggered when a truck gets the
+        # component needed to achieve the repair process
+        self.got_component = env.event()
 
         # The following are variables that may be used for calculating output
         #  variables
@@ -49,6 +53,7 @@ class Truck(object):
         self.comp_repair_time = 0
         # failed component's lead time
         self.comp_inventory_time = 0
+        self.comp_type = 0
 
     def run(self):
         """ The run process.
@@ -102,6 +107,7 @@ class Truck(object):
         # The failure method. It checks whether there are trucks in stand-by
         # to replace the failing truck
         print('Truck # %d stopped working at %d' % (self.id, self.env.now))
+        self.inventory.request_component(self)
         if self.fleet.stand_by_trucks != []:
             truck = self.fleet.stand_by_trucks.pop(0)
             # Trigger the activate_event of new truck

@@ -4,6 +4,7 @@ import simpy
 from processes.workshop import Workshop
 from random_generator import RandomTime
 from processes.fleet import Fleet
+from processes.inventory import Inventory
 # from plotter.console_printer import ConsolePrinter as printer
 
 
@@ -25,8 +26,8 @@ SIMULATION_HORIZON = 1000
 def main():
     """Main function to be runned."""
 
-<<<<<<< HEAD
-    printer.welcome() # Welcome message
+#<<<<<<< HEAD
+ #   printer.welcome() # Welcome message
 
     env = simpy.Environment()
     # lifetime, repair time and inventory replacement time distributions for each distribution
@@ -36,7 +37,9 @@ def main():
             RandomTime('exponential',REPAIRTIME_MEAN), 
             RandomTime('exponential',REPLACEMENTTIME_MEAN)])
 
-    fleet = Fleet(1,c,TRUCKS_AMOUNT,TRUCKS_USE,env)
+    start_inventory = {1 : 3, 2 : 2 ,3 : 1, 4 : 2}
+    inv = Inventory(env,start_inventory)
+    fleet = Fleet(1,c,[1,2,3,3,4],TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
 

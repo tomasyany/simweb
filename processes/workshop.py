@@ -48,6 +48,9 @@ class Workshop(object):
             while Workshop.Queue != []:
                 # get the first truck in the queue
                 truck = Workshop.Queue.pop(0)
+                # wait until the replacement component has arrived
+                yield truck.got_component
+                truck.got_component = self.env.event()
                 # wait for the repair job to be done
                 yield self.env.timeout(truck.repair_time)
                 print('Truck # %d was repaired at %d' %(truck.id,self.env.now))
