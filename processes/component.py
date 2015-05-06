@@ -66,6 +66,8 @@ class Component(object):
             try:
                 # wait time_left
                 yield self.env.timeout(self.time_left)
+                print('Component # %d of Truck # %d has failed at %d' %(
+                    self.id, self.truck.id, self.env.now))
                 self.truck.fail_event.succeed()    # Trigger the fail event
                 # set time_left to a new random value
                 self.time_left = self.distlife.getInstance()

@@ -11,10 +11,10 @@ from processes.inventory import Inventory
 # Constants
 RANDOM_SEED = 42
 
-TRUCKS_AMOUNT = 20 # Total number of trucks (in use, at workshop or standing-by)
-TRUCKS_USE = 15 # Required number of trucks in use at the same time
+TRUCKS_AMOUNT = 2 # Total number of trucks (in use, at workshop or standing-by)
+TRUCKS_USE = 2 # Required number of trucks in use at the same time
 
-WORKSHOP_CAPACITY = 4
+WORKSHOP_CAPACITY = 1
 
 COMPONENTS = 5 # Number of components
 LIFETIME_MEAN = 20
