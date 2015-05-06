@@ -69,9 +69,9 @@ class Workshop(object):
         # wait for the repair job to be done
         print('Workshop # %d has begun repair process on truck # %d at %d' %(
             self.id, truck.id, self.env.now))
-        yield self.env.timeout(truck.repair_time)
-        print('Truck # %d was repaired at %d by workshop # %d' % (truck.id,
-                                                         self.env.now, self.id))
+        yield self.env.timeout(truck.comp_repair_time)
+        print('Truck # %d was repaired by workshop # %d at %d' % (
+            truck.id, self.id, self.env.now))
         # Trigger the repair event: it tells the truck it's been
         # repaired
         truck.repair_event.succeed()
