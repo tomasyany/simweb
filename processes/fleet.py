@@ -46,3 +46,17 @@ class Fleet(object):
                 self.active_trucks.append(truck)
             else:
                 self.stand_by_trucks.append(truck)
+
+    def get_mean_times(self):
+        active_time = 0
+        off_time = 0
+        stand_by_time = 0
+        for truck in self.active_trucks + self.off_trucks + \
+                self.stand_by_trucks:
+            active_time += truck.get_output_times()[0]
+            off_time += truck.get_output_times()[1]
+            stand_by_time += truck.get_output_times()[2]
+        mean_active = float(active_time)/self.n_trucks
+        mean_off = float(off_time)/self.n_trucks
+        mean_sb = float(stand_by_time)/self.n_trucks
+        return [mean_active, mean_off, mean_sb]

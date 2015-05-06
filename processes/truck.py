@@ -49,6 +49,14 @@ class Truck(object):
         self.off_time = 0
         # the total amount of time this truck is in stand-by
         self.standby_time = 0
+        # the last failure time
+        self.failure_time = 0
+        # the last repair time
+        self.repair_time = 0
+        # the last activation time
+        self.start_time = 0
+        # the current state = 'active', 'off' or 'stand_by'
+        self.state = 'stand_by'
 
         # this is the time required to be repaired (it may change each time
         # this truck fails)
@@ -70,10 +78,11 @@ class Truck(object):
             # We set the activate_event to a new event that hasn't been
             # triggered yet
             self.activate_event = self.env.event()
+            self.state = 'active'    # set current state to 'active'
 
             # Update the total time spent in stand-by
             self.standby_time += self.env.now-self.repair_time
-            start_time = self.env.now
+            self.start_time = self.env.now
 
             print('Truck # %d started working at %d' %(self.id, self.env.now))
 
@@ -81,12 +90,13 @@ class Truck(object):
             # truck's components
             yield self.fail_event
             self.fail_event = self.env.event()
+            self.state = 'off'    # set current state to 'off'
+            self.failure_time = self.env.now # update the last failure time
 
             # Update the total working time
-            self.working_time +=self.env.now-start_time
+            self.working_time +=self.env.now-self.start_time
 
             self.failure()    # call the failure method
-            failure_time = self.env.now # update the last failure time
 
             # Step 3: Remove the truck from the active list and add it to the
             # off list
@@ -101,9 +111,11 @@ class Truck(object):
             #Step 4: Wait until the repair_event has been triggered
             yield self.repair_event
             self.repair_event = self.env.event()
+
+            self.state = 'stand_by'    # set current state to 'stand_by'
             # update the total off time
-            self.off_time += self.env.now - failure_time
-            self.repair_time = self.env.now
+            self.off_time += self.env.now - self.failure_time
+            self.repair_time = self.env.now    # update last repair time
 
     def failure(self):
         # The failure method. It checks whether there are trucks in stand-by
@@ -128,5 +140,34 @@ class Truck(object):
             if self in Workshop.Queue_2:
                 Workshop.Queue_2.remove(self)
                 Workshop.Queue_1.append(self)
+                # self.insert_in_order()
                 print('Truck # %d has entered queue 1 at %d' % (self.id,
                       self.env.now))
+
+    def insert_in_order(self):
+        for idx, truck in enumerate(Workshop.Queue_1):
+            index = -1
+            if truck.failure_time > self.failure_time:
+                index = idx
+                break
+            if index == -1:
+                Workshop.Queue_1.append(self)
+            else:
+                Workshop.Queue_1 = Workshop.Queue_1[:index] + [self] + \
+                                   Workshop.Queue_1[index:]
+
+    def get_output_times(self):
+        # This method returns the total working time, the total off time and
+        # the total stand-by time at the end of the simulation
+
+        if self.state == 'active':
+            self.working_time += self.env.now - self.start_time
+            self.start_time = self.env.now
+        elif self.state == 'off':
+            self.off_time += self.env.now - self.failure_time
+            self.failure_time = self.env.now
+        else:
+            self.standby_time += self.env.now - self.repair_time
+            self.repair_time = self.env.now
+        return [self.working_time, self.off_time, self.standby_time]
+
