@@ -5,7 +5,7 @@ import simpy
 
 class Component(object):
     """ This class is useful to define a component as an object
-    characeterized by three random time variables (lifetime, repair time and
+    defined by three random time variables (lifetime, repair time and
     inventory replacement time) and by a parent truck.
 
     Each component has a run() process that waits until its lifetime is over
