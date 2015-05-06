@@ -16,13 +16,14 @@ TRUCKS_USE = 2 # Required number of trucks in use at the same time
 
 WORKSHOP_CAPACITY = 2
 
-COMPONENTS = 5 # Number of components
-LIFETIME_MEAN = 24*365*4
-REPAIRTIME_MEAN = 24
-REPLACEMENTTIME_MEAN = 24*30
-start_inventory = {1 : 2, 2 : 2 ,3 : 2, 4 : 2}
+COMPONENTS = 2 # Number of components
+LIFETIME_MEAN = 24*1
+REPAIRTIME_MEAN = 24*0.5
+REPLACEMENTTIME_MEAN = 24*0.5
+start_inventory = {1 : 1, 2 : 1 }
+t_list = [1,2]
 
-SIMULATION_HORIZON = 24*365*20
+SIMULATION_HORIZON = 24*30
 
 def main():
     """Main function to be runned."""
@@ -39,7 +40,7 @@ def main():
             RandomTime('exponential',REPLACEMENTTIME_MEAN)])
 
     inv = Inventory(env,start_inventory)
-    fleet = Fleet(1,c,[1,2,3,3,4],TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
+    fleet = Fleet(1,c,t_list,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
 
