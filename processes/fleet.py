@@ -9,7 +9,7 @@ class Fleet(object):
     def __init__(self, fleet_id,component_distributions,type_list,n_trucks,
                  design_number,
                  env,inventory):
-        """The contructor of the Fleet class."""
+        """ The constructor of the Fleet class."""
 
         self.fleet_id = fleet_id
         # n_trucks is the total amount of trucks in this fleet

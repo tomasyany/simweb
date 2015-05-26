@@ -13,7 +13,7 @@ from processes.component import Component
 # Constants
 RANDOM_SEED = 42
 
-REPLICATIONS = 1
+REPLICATIONS = 60
 
 TRUCKS_AMOUNT = 2 # Total number of trucks (in use, at workshop or standing-by)
 TRUCKS_USE = 2 # Required number of trucks in use at the same time
@@ -27,7 +27,7 @@ REPLACEMENTTIME_MEAN = 24*0.5
 start_inventory = {1 : 1, 2 : 1 }
 t_list = [1,2]
 
-SIMULATION_HORIZON = 24*365*1
+SIMULATION_HORIZON = 24*50*1
 
 
 def run():
@@ -50,10 +50,27 @@ def run():
     out_v = [float(mean_times[0])/env.now, float(mean_times[1])/env.now,
               float(mean_times[
         2])/env.now]
+    out_v.append(Workshop.Ndone)
 
     print('I: Active time proportion = %f' % out_v[0])
     print('I: Off time proportion = %f' % out_v[1])
     print('I: Stand-by time proportion = %f' % out_v[2])
+    print('I: Repaired trucks = %f' % out_v[3])
+
+    # Restart environment variables
+    env.event = None
+    env.all_of = None
+    env._active_proc = None
+    env._queue = None
+    env.any_of = None
+    env._eid = None
+    Workshop.Busy = []
+    Workshop.Idle = []
+    Workshop.Queue_1 = []
+    Workshop.Queue_2 = []
+    Workshop.next_id = 1
+    Workshop.Ndone = 0
+    env = None
 
     return out_v
 
@@ -66,16 +83,18 @@ def main():
     output_active = []
     output_off = []
     output_standby = []
+    output_jobs = []
     for i in range(REPLICATIONS):
         r = run()
         output_active.append(r[0])
         output_off.append(r[1])
         output_standby.append(r[2])
+        output_jobs.append(r[3])
 
     print(output_active)
     print(output_off)
     print(output_standby)
-    print Workshop.Ndone
+    print(output_jobs)
 
 
 if __name__ == "__main__":
