@@ -10,8 +10,6 @@ class Truck(object):
     completed.
     Repaired trucks can go either active (working) or stand-by """
 
-    repair_time = 0   # time of last reparation = 0 by default
-
     def __init__(self,env,t_id,components,fleet,inventory):
         """" Constructor for the Truck process"""
         # components is a list containing all the components of this truck
