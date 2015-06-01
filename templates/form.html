@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="" method="post">
+
+  {{ form.hidden_tag() }}
+
+  <div class="form-group smallWidth">
+    <label for="replications">Cantidad de réplicas deseadas</label>
+    {{ form.replications(class_="form-control", placeholder="Réplicas", type="number")  }}
+  </div>
+
+  <div class="form-group smallWidth">
+    <label for="simulation_horizon">Horizonte de simulación (horas)</label>
+    {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte de simulación", type="number")  }}
+  </div>
+
+  <div class="form-group smallWidth">
+    <label for="trucks_amount">Cantidad de vehículos</label>
+    {{ form.trucks_amount(class_="form-control", placeholder="Cantidad de vehículos", type="number")  }}
+  </div>
+
+
+  <input type="submit" class="btn btn-success" value="SIMULAR">
+</form>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+.wrap {
+  width: 900px;
+  margin: auto auto ;
+}
+
+#startButton{
+  width: 100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.smallWidth{
+  width:25%;
+}
+
+.medWidth{
+  width:50%;
+}
