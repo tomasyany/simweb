@@ -1,28 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <form action="" method="post">
-
+<div style="float:left;width:100%">
   {{ form.hidden_tag() }}
+  <div name="general" class="medWidth" style="float:left;">
+    <div class="form-inline" style="float:right;">
+      <label for="replications">Cantidad de réplicas deseadas</label>
+      {{ form.replications(class_="form-control", placeholder="Réplicas", type="number")  }}
+    </div>
 
-  <div class="form-group smallWidth">
-    <label for="replications">Cantidad de réplicas deseadas</label>
-    {{ form.replications(class_="form-control", placeholder="Réplicas", type="number")  }}
+    <div class="form-inline" style="float:right;">
+      <label for="simulation_horizon">Horizonte de simulación (horas)</label>
+      {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte", type="number")  }}
+    </div>
+
+    <div class="form-inline" style="float:right;">
+      <label for="trucks_amount">Cantidad total de vehículos</label>
+      {{ form.trucks_amount(class_="form-control", placeholder="Cantidad", type="number")  }}
+    </div>
+
+    <div class="form-inline" style="float:right;">
+      <label for="trucks_use">Cantidad de vehículos en uso</label>
+      {{ form.trucks_use(class_="form-control", placeholder="Cantidad", type="number")  }}
+    </div>  
+
+    <div class="form-inline" style="float:right;">
+      <label for="workshop_capacity">Capacidad del taller</label>
+      {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad", type="number")  }}
+    </div>
+
+    <div class="form-inline" style="float:right;">
+      <label for="components">Cantidad de componentes por vehículo</label>
+      {{ form.components(class_="form-control", placeholder="Cantidad", type="number", onchange="addFields()")  }}
+    </div>
+
   </div>
-
-  <div class="form-group smallWidth">
-    <label for="simulation_horizon">Horizonte de simulación (horas)</label>
-    {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte de simulación", type="number")  }}
+  
+  <div id="container" name="component_unit" class="bigWidth" style="float:right;">
   </div>
-
-  <div class="form-group smallWidth">
-    <label for="trucks_amount">Cantidad de vehículos</label>
-    {{ form.trucks_amount(class_="form-control", placeholder="Cantidad de vehículos", type="number")  }}
-  </div>
-
-
-  <input type="submit" class="btn btn-success" value="SIMULAR">
+    
+</div>
+  <input type="submit" class="btn btn-success" style="float:right;" value="SIMULAR">
 </form>
+
+<template id="component-template">
+  <div class="form-inline">
+
+    <div class="form-group">
+      {{ form.component_name(class_="form-control", placeholder="Nombre", type="text") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.failure_distr(class_="form-control", type="text") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.failure_param(class_="form-control", placeholder="Parámetros", type="number") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.initial_stock(class_="form-control", placeholder="Stock inicial", type="number") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.work_distr(class_="form-control", type="text") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.work_param(class_="form-control", placeholder="Parámetros", type="number") }}
+    </div>
+  </div>
+
+</template>
+
+
 
 {% endblock %}

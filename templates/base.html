@@ -7,13 +7,67 @@
     {% else %}
     <title>Car Simulator</title>
     {% endif %}
+
+    <script type='text/javascript'>
+        function addFields(){
+            // Number of inputs to create
+            var number = document.getElementById("components").value;
+            // Container <div> where dynamic content will be placed
+            var container = document.getElementById("container");
+            // Clear previous contents of the container
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+            for (i=0;i<number;i++){
+                // Append a node with a random text
+                var tmpl = document.getElementById('component-template');
+                container.appendChild(tmpl.content.cloneNode(true));
+
+                name = "component_name"+i
+                var c_name = document.getElementById('component_name');
+                c_name.innerHTML = ""
+                c_name.setAttribute('id', name);
+                c_name.setAttribute('name', name);
+
+                name = "failure_distr"+i
+                var f_distr = document.getElementById('failure_distr');
+                f_distr.setAttribute('id', name);
+                f_distr.setAttribute('name', name);
+
+                name = "failure_param"+i
+                var f_param = document.getElementById('failure_param');
+                f_param.innerHTML = ""
+                f_param.setAttribute('id', name);
+                f_param.setAttribute('name', name);
+
+                name = "initial_stock"+i
+                var i_stock = document.getElementById('initial_stock');
+                i_stock.innerHTML = ""
+                i_stock.setAttribute('id', name);
+                i_stock.setAttribute('name', name);
+                
+                name = "work_distr"+i
+                var w_distr = document.getElementById('work_distr');
+                w_distr.setAttribute('id', name);
+                w_distr.setAttribute('name', name);
+
+                name = "work_param"+i
+                var w_param = document.getElementById('work_param');
+                w_param.innerHTML = ""
+                w_param.setAttribute('id', name);
+                w_param.setAttribute('name', name);
+
+                
+            }
+        }
+    </script>
   </head>
   <body>
     <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
+      <div class="wrap">
+        <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href='/'>Inicio</a></li>
+            <li><a href='/'>Inicio</a></li>
           </ul>
         </div>
       </div>

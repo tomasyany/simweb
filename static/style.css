@@ -1,5 +1,5 @@
 .wrap {
-  width: 900px;
+  width: 1500px;
   margin: auto auto ;
 }
 
@@ -9,10 +9,14 @@
   position: relative;
 }
 
-.smallWidth{
-  width:25%;
+.medWidth{
+  width:30%;
 }
 
-.medWidth{
-  width:50%;
+.bigWidth{
+  width:69%;
+}
+
+.form-inline{
+  padding-bottom: 1em;
 }
