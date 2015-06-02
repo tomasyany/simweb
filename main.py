@@ -17,7 +17,7 @@ def form():
   form = SimForm()
   if form.validate_on_submit(): 
     return redirect('/results1')
-  return render_template('form.html', title='Formulario', form=form)
+  return render_template('form.html', title='Setup', form=form)
 
 
 @app.route ('/results1')
