@@ -2,37 +2,31 @@
 
 {% block content %}
 <form action="" method="post">
-<div style="float:left;width:100%">
+<div style="float:left;width:100%;">
   {{ form.hidden_tag() }}
   <div name="general" class="medWidth" style="float:left;">
-    <div class="form-inline" style="float:right;">
-      <label for="replications">Cantidad de réplicas deseadas</label>
-      {{ form.replications(class_="form-control", placeholder="Réplicas", type="number")  }}
+    <div class="form-group">
+      {{ form.replications(class_="form-control", placeholder="Cantidad de réplicas", type="number")  }}
     </div>
 
-    <div class="form-inline" style="float:right;">
-      <label for="simulation_horizon">Horizonte de simulación (horas)</label>
-      {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte", type="number")  }}
+    <div class="form-group">
+      {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte (horas)", type="number")  }}
     </div>
 
-    <div class="form-inline" style="float:right;">
-      <label for="trucks_amount">Cantidad total de vehículos</label>
-      {{ form.trucks_amount(class_="form-control", placeholder="Cantidad", type="number")  }}
+    <div class="form-group">
+      {{ form.trucks_amount(class_="form-control", placeholder="Flota total", type="number")  }}
     </div>
 
-    <div class="form-inline" style="float:right;">
-      <label for="trucks_use">Cantidad de vehículos en uso</label>
-      {{ form.trucks_use(class_="form-control", placeholder="Cantidad", type="number")  }}
+    <div class="form-group">
+      {{ form.trucks_use(class_="form-control", placeholder="Flota en uso", type="number")  }}
     </div>  
 
-    <div class="form-inline" style="float:right;">
-      <label for="workshop_capacity">Capacidad del taller</label>
-      {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad", type="number")  }}
+    <div class="form-group">
+      {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad taller", type="number")  }}
     </div>
 
-    <div class="form-inline" style="float:right;">
-      <label for="components">Cantidad de componentes por vehículo</label>
-      {{ form.components(class_="form-control", placeholder="Cantidad", type="number", onchange="addFields()")  }}
+    <div class="form-group">
+      {{ form.components(class_="form-control", placeholder="Cantidad componentes", type="number", onchange="addFields()")  }}
     </div>
 
   </div>
@@ -45,32 +39,38 @@
 </form>
 
 <template id="component-template">
-  <div class="form-inline">
 
-    <div class="form-group">
-      {{ form.component_name(class_="form-control", placeholder="Nombre", type="text") }}
+    <div class="form-group" style="float:left; padding-right: 10px;">
+      {{ form.component_name(class="form-control", placeholder="Nombre", type="text") }}
     </div>
 
-    <div class="form-group">
-      {{ form.failure_distr(class_="form-control", type="text") }}
+    <div class="form-group" style="float:left; padding-right: 5px;">
+      {{ form.failure_distr(class="form-control", type="text") }}
     </div>
 
-    <div class="form-group">
-      {{ form.failure_param(class_="form-control", placeholder="Parámetros", type="number") }}
+    <div class="form-group" style="float:left; padding-right: 10px;">
+      {{ form.failure_param(class="form-control", placeholder="Parámetros", type="number") }}
     </div>
 
-    <div class="form-group">
-      {{ form.initial_stock(class_="form-control", placeholder="Stock inicial", type="number") }}
+    <div class="form-group" style="float:left; padding-right: 10px;">
+      {{ form.initial_stock(class="form-control", placeholder="Stock inicial", type="number") }}
     </div>
 
-    <div class="form-group">
-      {{ form.work_distr(class_="form-control", type="text") }}
+    <div class="form-group" style="float:left; padding-right: 5px;">
+      {{ form.work_distr(class="form-control", type="text") }}
     </div>
 
-    <div class="form-group">
-      {{ form.work_param(class_="form-control", placeholder="Parámetros", type="number") }}
+    <div class="form-group" style="float:left; padding-right: 10px;">
+      {{ form.work_param(class="form-control", placeholder="Parámetros", type="number") }}
     </div>
-  </div>
+
+    <div class="form-group" style="float:left; padding-right: 5px;">
+      {{ form.repl_distr(class="form-control", type="text") }}
+    </div>
+
+    <div class="form-group" style="float:left; padding-right: 10px;">
+      {{ form.repl_param(class="form-control", placeholder="Parámetros", type="number") }}
+    </div>
 
 </template>
 

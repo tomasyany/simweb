@@ -23,39 +23,50 @@
                 var tmpl = document.getElementById('component-template');
                 container.appendChild(tmpl.content.cloneNode(true));
 
-                name = "component_name"+i
+                name = "component_name"+i;
                 var c_name = document.getElementById('component_name');
-                c_name.innerHTML = ""
+                c_name.innerHTML = "";
                 c_name.setAttribute('id', name);
                 c_name.setAttribute('name', name);
 
-                name = "failure_distr"+i
+                name = "failure_distr"+i;
                 var f_distr = document.getElementById('failure_distr');
                 f_distr.setAttribute('id', name);
                 f_distr.setAttribute('name', name);
 
-                name = "failure_param"+i
+                name = "failure_param"+i;
                 var f_param = document.getElementById('failure_param');
-                f_param.innerHTML = ""
+                f_param.innerHTML = "";
                 f_param.setAttribute('id', name);
                 f_param.setAttribute('name', name);
 
-                name = "initial_stock"+i
+                name = "initial_stock"+i;
                 var i_stock = document.getElementById('initial_stock');
-                i_stock.innerHTML = ""
+                i_stock.innerHTML = "";
                 i_stock.setAttribute('id', name);
                 i_stock.setAttribute('name', name);
                 
-                name = "work_distr"+i
+                name = "work_distr"+i;
                 var w_distr = document.getElementById('work_distr');
                 w_distr.setAttribute('id', name);
                 w_distr.setAttribute('name', name);
 
-                name = "work_param"+i
+                name = "work_param"+i;
                 var w_param = document.getElementById('work_param');
-                w_param.innerHTML = ""
+                w_param.innerHTML = "";
                 w_param.setAttribute('id', name);
                 w_param.setAttribute('name', name);
+
+                name = "repl_distr"+i;
+                var r_distr = document.getElementById('repl_distr');
+                r_distr.setAttribute('id', name);
+                r_distr.setAttribute('name', name);
+
+                name = "repl_param"+i;
+                var r_param = document.getElementById('repl_param');
+                r_param.innerHTML = "";
+                r_param.setAttribute('id', name);
+                r_param.setAttribute('name', name);
 
                 
             }

@@ -10,11 +10,15 @@
 }
 
 .medWidth{
-  width:30%;
+  width:14%;
 }
 
 .bigWidth{
-  width:69%;
+  width:85%;
+}
+
+.smWidth{
+  width:10%;
 }
 
 .form-inline{

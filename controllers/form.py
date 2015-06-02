@@ -29,6 +29,9 @@ class SimForm(Form):
   work_distr = distributions
   work_param = IntegerField('failure_param', validators=[DataRequired()])
 
+  repl_distr = distributions
+  repl_param = IntegerField('repl_param', validators=[DataRequired()])
+
 
 
   def form1():
