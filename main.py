@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
+from flask import flash
 
 from controllers.form import SimForm
 
@@ -14,9 +15,9 @@ def home():
 
 @app.route ('/form', methods=['GET', 'POST'])
 def form(): 
-  form = SimForm()
-  if form.validate_on_submit(): 
-    return redirect('/results1')
+  form = SimForm(request.form)
+  if request.method == 'POST' and form.validate():
+      return redirect('/results1')
   return render_template('form.html', title='Setup', form=form)
 
 

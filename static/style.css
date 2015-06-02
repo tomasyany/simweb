@@ -24,3 +24,16 @@
 .form-inline{
   padding-bottom: 1em;
 }
+
+.glyphicon.glyphicon-home {
+    font-size: 25px;
+}
+
+.navbar-nav{
+    font-size: 25px; 
+}
+
+.settings{
+  float:left;
+  width:22%;
+}
