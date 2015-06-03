@@ -77,7 +77,7 @@ def run():
     return out_v
 
 def main():
-    """Main function to be runned."""
+    """Main function to be  runned."""
 
     #<<<<<<< HEAD
     #   printer.welcome() # Welcome message
