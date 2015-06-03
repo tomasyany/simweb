@@ -1,6 +1,7 @@
 <html>
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
   <head>
     {% if title %}
     <title>{{ title }}</title>
@@ -120,7 +121,7 @@
     </script>
   </head>
   <body>
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-inverse navbar-static-top">
       <div class="wrap">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -132,9 +133,27 @@
         </div>
       </div>
     </nav>
-    <hr>
     <div class="wrap">
-    {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
+    <footer>
+    <div>
+        <p class="wrap" style="vertical-align: middle;">
+        <small>
+        ICS3723 - Simulación Web 2015 - Pedro Gazmuri - Pablo Senosiain
+        </small>
+        </p>
+
+        <p class="wrap" style="vertical-align: middle;">
+        <small>
+        <strong>
+        Oscar Flores - Manuel Pérez - Tomás Yany - Roberto Zúñiga
+        </strong>
+        </small>
+        </p>
+    </div>
+    </footer>
   </body>
+      
 </html>

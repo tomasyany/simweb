@@ -1,11 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Bienvenido!</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<div style="width:90%; text-align:center; padding-top: 60px;" class="wrap">
+  <div class="jumbotron">
+    <h1>¡ Bienvenido a <strong>Car Simulator</strong> !</h1>
+    <br>
+    <p  class="lead">En esta aplicación podrá simular una flota de vehículos y su taller de reparaciones respectivo. 
+    <br><br>
+    La flota es personalizable en cantidad de componentes y en probabilidades de falla y tiempo de reparación de cada una.</p>
+  </div>
   
-  <div id="startButton" >
-    <a type="button" class="btn btn-lg btn-success" href="/form">
-      COMENZAR
+  <div class="wrap">
+  <span class="glyphicon glyphicon-road" aria-hidden="true"></span>
+  <br>
+    <a type="button" class="btn btn-lg btn-block btn-danger" href="/form">
+      <h4>COMENZAR</h4>
     </a>
   </div>
+</div>  
 {% endblock %}

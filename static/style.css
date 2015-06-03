@@ -3,11 +3,6 @@
   margin: auto auto ;
 }
 
-#startButton{
-  width: 100px;
-  margin: 0 auto;
-  position: relative;
-}
 
 .medWidth{
   width:14%;
@@ -33,7 +28,44 @@
     font-size: 25px; 
 }
 
+
 .settings{
   float:left;
   width:22%;
+}
+
+.form-control{
+  text-align:center;
+}
+
+.jumbotron{
+  padding:10px 10px 10px 10px;
+  margin:0 0 5px 0;
+}
+
+footer {
+    text-align:center;
+    background-color: #eee;
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+}
+
+footer div {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+footer div p{
+  font-size:19px;
+}
+
+.glyphicon.glyphicon-road{
+  font-size:250px; 
+}
+
+.glyphicon.glyphicon-play{
+  font-size:25px; 
 }
