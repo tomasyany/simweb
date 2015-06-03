@@ -14,7 +14,7 @@ class RandomTime(object):
         elif dist == 'normal':
             return random.normal(p[0],p[1])
         elif dist == 'uniform':
-            return random.uniform(p[0],p[1])
+            return random.uniform(p[0][0],p[0][1])
         elif dist == 'poisson':
             return random.poisson(p[0])
         elif dist == 'binomial':
@@ -24,7 +24,7 @@ class RandomTime(object):
         elif dist == 'weibull':
             return random.weibull(p[0])
         elif dist == 'gamma':
-            return random.gamma(p[0],p[1])
+            return random.gamma(p[0][0],p[0][1])
         elif dist == 'beta':
             return random.beta(p[0],p[1])
         elif dist == 'lognormal':
