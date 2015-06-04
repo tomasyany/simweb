@@ -70,6 +70,10 @@ footer div p{
   font-size:25px; 
 }
 
-/*.form-group{
-  margin:0 0 0 0 ;
-}*/
+table tr th{
+    text-transform: uppercase;
+}
+
+table tr td,th{
+  text-align:center;
+}
