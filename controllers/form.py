@@ -21,7 +21,9 @@ class SimForm(Form):
 
 
   distributions = [('poisson', 'Poisson'), 
-    ('exponential', 'Exponencial'), ('weibull', 'Weibull')]
+    ('exponential', 'Exponencial'), ('normal', 'Normal'), ('uniform', 'Uniforme'), 
+    ('binomial', 'Binomial'), ('geometric', 'Geométrica'), ('gamma', 'Gamma'), 
+    ('beta', 'Beta'), ('lognormal', 'Log Normal'), ('weibull', 'Weibull')]
 
   failure_distr =  SelectField(u'Distribución',[validators.InputRequired()], choices=distributions)
   failure_param = IntegerField('failure_param', [validators.InputRequired()])

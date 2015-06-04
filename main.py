@@ -25,6 +25,10 @@ def form():
 def results1(): 
   return render_template('results1.html', title='Resultados 1')
 
+@app.route ('/table1')
+def table1(): 
+  return render_template('table1.html', title='Resultados 1')
+
 @app.route ('/results2')
 def results2(): pass
 

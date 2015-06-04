@@ -34,7 +34,7 @@
       {{ form.trucks_use(class_="form-control", placeholder="Flota en uso", type="number")  }}
     </div>  
 
-    <div class="form-group">
+    <div  class="form-group">
       {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad taller", type="number")  }}
     </div>
 
@@ -50,13 +50,13 @@
       <div id="componente" class="form-group" style="width:100%; margin: 0 auto;">
       </div>
     </div>
-    <div class="settings" style="padding-right: 8px;">
+    <div class="settings" style="float:left;padding-right: 8px;">
     <h3 style="text-align: center;">Fallas</h3>
-      <div id="fallas" class="form-group" style="float:left; margin: 0 auto; padding-right: 5px; width:100%;">
+      <div id="fallas" class="form-group" style=" width:100%;  margin: 0 auto;">
       </div>
     </div>
     <div class="settings" style="padding-right: 8px;">
-    <h3 style="text-align: center;">Reemplazo</h3>
+    <h3 style="text-align: center;">Reposición</h3>
       <div id="reemplazo" class="form-group" style="float:left; width:100%; margin: 0 auto;">
       </div>
     </div>
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="settings" >
-    <h3 style="text-align: center;">Taller</h3>
+    <h3 style="text-align: center;">Reparación</h3>
       <div id="taller" class="form-group" style="margin: 0 auto; width:100%;">
       </div>
     </div>
@@ -80,45 +80,45 @@
 </form>
 
 <template id="componente-template">
-  <div>
+  <div class="form-group">
     {{ form.component_name(class="form-control", placeholder="Nombre", type="text", id="component_name") }}
   </div>
 </template>
 
 <template id="fallas-template">
-  <div style="display: table; padding-right: 5px;">
-    <div style="display: table-cell;">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
       {{ form.failure_distr(class="form-control", type="text", id="failure_distr") }}
     </div>
-    <div style="display: table-cell;">
+    <div style="margin-left: 125px;">
       {{ form.failure_param(class="form-control", placeholder="Parámetros",type="number", id="failure_param") }}
     </div>
   </div>
 </template>
 
 <template id="reemplazo-template">
-  <div style="display: table; padding-right: 5px;">
-    <div style="display: table-cell;">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
       {{ form.repl_distr(class="form-control", type="text", id="repl_distr") }}
     </div>
-    <div style="display: table-cell;">
+    <div style="margin-left: 125px;">
       {{ form.repl_param(class="form-control", placeholder="Parámetros", type="number", id="repl_param") }}
     </div>
   </div>
 </template>
 
 <template id="inventario-template">
-  <div>
+  <div class="form-group">
     {{ form.initial_stock(class="form-control", placeholder="Stock inicial", type="number", id="initial_stock") }}
   </div>
 </template>
 
 <template id="taller-template">
-  <div style="display: table; padding-right: 5px;">
-    <div style="display: table-cell;">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
       {{ form.work_distr(class="form-control", type="text", id="work_distr") }}
     </div>
-    <div style="display: table-cell;">
+    <div style="margin-left: 125px;">
       {{ form.work_param(class="form-control", placeholder="Parámetros", type="number", id="work_param") }}
     </div>
   </div>
