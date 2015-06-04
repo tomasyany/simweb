@@ -15,17 +15,17 @@ RANDOM_SEED = 42
 
 REPLICATIONS = 1
 
-TRUCKS_AMOUNT = 20 # Total number of trucks (in use, at workshop or standing-by)
-TRUCKS_USE = 15 # Required number of trucks in use at the same time
+TRUCKS_AMOUNT = 3 # Total number of trucks (in use, at workshop or standing-by)
+TRUCKS_USE = 2 # Required number of trucks in use at the same time
 
-WORKSHOP_CAPACITY = 4
+WORKSHOP_CAPACITY = 2
 
-COMPONENTS = 3 # Number of components
-LIFETIME_MEAN = [24*1, 24*7, 24 *3]
-REPAIRTIME_MEAN = [[5,10], [12, 24], [12,20]]
-REPLACEMENTTIME_MEAN = [[2,24], [3,24], [3,12]]
-start_inventory = {1 : 2, 2 : 1, 3 : 1 }
-t_list = [1, 2, 3]
+COMPONENTS = 2 # Number of components
+LIFETIME_MEAN = 24*1
+REPAIRTIME_MEAN = 24*0.5
+REPLACEMENTTIME_MEAN = 24*0.5
+start_inventory = {1 : 1, 2 : 1 }
+t_list = [1,2]
 
 SIMULATION_HORIZON = 24*365
 
@@ -35,9 +35,9 @@ def run():
     # lifetime, repair time and inventory replacement time distributions for each distribution
     c = []
     for i in range(COMPONENTS):
-        c.append([RandomTime('exponential',LIFETIME_MEAN[i]),
-            RandomTime('uniform',REPAIRTIME_MEAN[i]),
-            RandomTime('gamma',REPLACEMENTTIME_MEAN[i])])
+        c.append([RandomTime('exponential',LIFETIME_MEAN),
+            RandomTime('exponential',REPAIRTIME_MEAN),
+            RandomTime('exponential',REPLACEMENTTIME_MEAN)])
 
     inv = Inventory(env,start_inventory)
     fleet = Fleet(1,c,t_list,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
@@ -77,17 +77,19 @@ def run():
     return out_v
 
 def main():
-    """Main function to be  runned."""
+    """Main function to be runned."""
 
     #<<<<<<< HEAD
     #   printer.welcome() # Welcome message
 
     r = run()
 
-    my_file = open('output.txt', 'a')
+    my_file = open('data.csv', 'a')
     my_line = ""
     for i in range(0, len(r)):
-           my_line += str(r[i])+"\t"
+        my_line += str(r[i])
+        if i<len(r)-1:
+            my_line += ","
     my_line += "\n"
     my_file.write(my_line)
     my_file.close()
