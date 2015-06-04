@@ -13,9 +13,9 @@ from processes.component import Component
 # Constants
 RANDOM_SEED = 42
 
-REPLICATIONS = 60
+REPLICATIONS = 1
 
-TRUCKS_AMOUNT = 2 # Total number of trucks (in use, at workshop or standing-by)
+TRUCKS_AMOUNT = 3 # Total number of trucks (in use, at workshop or standing-by)
 TRUCKS_USE = 2 # Required number of trucks in use at the same time
 
 WORKSHOP_CAPACITY = 2
@@ -27,7 +27,7 @@ REPLACEMENTTIME_MEAN = 24*0.5
 start_inventory = {1 : 1, 2 : 1 }
 t_list = [1,2]
 
-SIMULATION_HORIZON = 24*50*1
+SIMULATION_HORIZON = 24*365
 
 
 def run():
@@ -57,6 +57,7 @@ def run():
     print('I: Stand-by time proportion = %f' % out_v[2])
     print('I: Repaired trucks = %f' % out_v[3])
 
+
     # Restart environment variables
     env.event = None
     env.all_of = None
@@ -72,6 +73,7 @@ def run():
     Workshop.Ndone = 0
     env = None
 
+
     return out_v
 
 def main():
@@ -80,22 +82,17 @@ def main():
     #<<<<<<< HEAD
     #   printer.welcome() # Welcome message
 
-    output_active = []
-    output_off = []
-    output_standby = []
-    output_jobs = []
-    for i in range(REPLICATIONS):
-        r = run()
-        output_active.append(r[0])
-        output_off.append(r[1])
-        output_standby.append(r[2])
-        output_jobs.append(r[3])
+    r = run()
 
-    print(output_active)
-    print(output_off)
-    print(output_standby)
-    print(output_jobs)
-
+    my_file = open('data.csv', 'a')
+    my_line = ""
+    for i in range(0, len(r)):
+        my_line += str(r[i])
+        if i<len(r)-1:
+            my_line += ","
+    my_line += "\n"
+    my_file.write(my_line)
+    my_file.close()
 
 if __name__ == "__main__":
     main()

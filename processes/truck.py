@@ -47,12 +47,20 @@ class Truck(object):
         self.off_time = 0
         # the total amount of time this truck is in stand-by
         self.standby_time = 0
+        # total amount of time spent in queue 2
+        self.t_queue2_time = 0
+        # total amount of time spent in queue 1
+        self.t_queue1_time = 0
+
         # the last failure time
         self.failure_time = 0
         # the last repair time
         self.repair_time = 0
         # the last activation time
         self.start_time = 0
+        # last time truck left queue_2
+        self.l_q2_time = 0
+
         # the current state = 'active', 'off' or 'stand_by'
         self.state = 'stand_by'
 
@@ -139,6 +147,8 @@ class Truck(object):
                 Workshop.Queue_2.remove(self)
                 Workshop.Queue_1.append(self)
                 # self.insert_in_order()
+                self.l_q2_time = self.env.now
+                self.t_queue2_time += self.env.now - self.failure_time
                 print('Truck # %d has entered queue 1 at %d' % (self.id,
                       self.env.now))
 
