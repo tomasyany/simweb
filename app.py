@@ -1,46 +1,47 @@
 """The app runs from here."""
 
+import sys
 import simpy
 from processes.workshop import Workshop
 from random_generator import RandomTime
 from processes.fleet import Fleet
 from processes.inventory import Inventory
-from processes.truck import Truck
-from processes.component import Component
+
 # from plotter.console_printer import ConsolePrinter as printer
 
 
 # Constants
-RANDOM_SEED = 42
+TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
+# standing-by)
+TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
 
-REPLICATIONS = 1
+WORKSHOP_CAPACITY = sys.argv[2]
 
-TRUCKS_AMOUNT = 3 # Total number of trucks (in use, at workshop or standing-by)
-TRUCKS_USE = 2 # Required number of trucks in use at the same time
+COMPONENTS = sys.argv[3] # Number of components
+C_NAMES = sys.argv[4]
 
-WORKSHOP_CAPACITY = 2
+life_dist = sys.argv[5]
+repair_dist = sys.argv[6]
+replacement_dist = sys.argv[7]
 
-COMPONENTS = 2 # Number of components
-LIFETIME_MEAN = 24*1
-REPAIRTIME_MEAN = 24*0.5
-REPLACEMENTTIME_MEAN = 24*0.5
-start_inventory = {1 : 1, 2 : 1 }
-t_list = [1,2]
+C_LIST =[]
+for i in range(COMPONENTS):
+    C_LIST.append([RandomTime(life_dist[0],life_dist[1]), RandomTime(
+        repair_dist[0],repair_dist[1]), RandomTime(replacement_dist[0],
+                    replacement_dist[1])])
 
-SIMULATION_HORIZON = 24*365
+start_inventory = {}
+for i in range(COMPONENTS):
+    start_inventory[C_NAMES[i]] = sys.argv[8][i]
+
+
+SIMULATION_HORIZON = sys.argv[9]
 
 
 def run():
     env = simpy.Environment()
-    # lifetime, repair time and inventory replacement time distributions for each distribution
-    c = []
-    for i in range(COMPONENTS):
-        c.append([RandomTime('exponential',LIFETIME_MEAN),
-            RandomTime('exponential',REPAIRTIME_MEAN),
-            RandomTime('exponential',REPLACEMENTTIME_MEAN)])
-
     inv = Inventory(env,start_inventory)
-    fleet = Fleet(1,c,t_list,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
+    fleet = Fleet(1,C_LIST,C_NAMES ,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
 
