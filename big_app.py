@@ -1,4 +1,4 @@
-import subprocess, timeit, sys
+import sys
 
 class Simulation(object):
 

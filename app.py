@@ -49,8 +49,7 @@ def run():
     print('Simulation finished at %d' % env.now)
     mean_times = fleet.get_mean_times()
     out_v = [float(mean_times[0])/env.now, float(mean_times[1])/env.now,
-              float(mean_times[
-        2])/env.now]
+             float(mean_times[2])/env.now]
     out_v.append(Workshop.Ndone)
 
     print('I: Active time proportion = %f' % out_v[0])
@@ -73,7 +72,6 @@ def run():
     Workshop.next_id = 1
     Workshop.Ndone = 0
     env = None
-
 
     return out_v
 
