@@ -1,4 +1,8 @@
-import sys
+import sys, simpy
+from processes.inventory import Inventory
+from random_generator import RandomTime
+from processes.fleet import Fleet
+from processes.workshop import Workshop
 
 class Simulation(object):
 
@@ -39,7 +43,7 @@ class Simulation(object):
         self.start_inventory = start_inventory
         self.simulation_horizon = simulation_horizon
 
-    def run(self):
+    def run_simulation(self):
         sys.argv = [self.total_trucks, self.design_number,
                     self.workshop_capacity, self.n_components,
                     self.comp_names, self.life_dist_parameters,
@@ -56,3 +60,7 @@ class Simulation(object):
             execfile('app.py')
 
         print "end"
+
+l1 = [["exponential",[10]], ["exponential", [10]]]
+s = Simulation(10,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
+s.run_simulation()

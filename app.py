@@ -10,37 +10,38 @@ from processes.inventory import Inventory
 # from plotter.console_printer import ConsolePrinter as printer
 
 
-# Constants
-TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
-# standing-by)
-TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
-
-WORKSHOP_CAPACITY = sys.argv[2]
-
-COMPONENTS = sys.argv[3] # Number of components
-C_NAMES = sys.argv[4]
-
-life_dist = sys.argv[5]
-repair_dist = sys.argv[6]
-replacement_dist = sys.argv[7]
-
-C_LIST =[]
-for i in range(COMPONENTS):
-    C_LIST.append([RandomTime(life_dist[0],life_dist[1]), RandomTime(
-        repair_dist[0],repair_dist[1]), RandomTime(replacement_dist[0],
-                    replacement_dist[1])])
-
-start_inventory = {}
-for i in range(COMPONENTS):
-    start_inventory[C_NAMES[i]] = sys.argv[8][i]
 
 
-SIMULATION_HORIZON = sys.argv[9]
+def main():
 
+    # Constants
+    TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
+    # standing-by)
+    TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
 
-def run():
+    WORKSHOP_CAPACITY = sys.argv[2]
+
+    COMPONENTS = sys.argv[3] # Number of components
+    C_NAMES = sys.argv[4]
+
+    life_dist = sys.argv[5]
+    repair_dist = sys.argv[6]
+    replacement_dist = sys.argv[7]
+
+    C_LIST =[]
+    for i in range(COMPONENTS):
+        C_LIST.append([RandomTime(life_dist[i][0],life_dist[i][1]), RandomTime(
+            repair_dist[i][0],repair_dist[i][1]), RandomTime(
+            replacement_dist[i][0], replacement_dist[i][1])])
+
+    start_inventory = {}
+    for i in range(COMPONENTS):
+        start_inventory[C_NAMES[i]] = sys.argv[8][i]
+
+    SIMULATION_HORIZON = sys.argv[9]
+
     env = simpy.Environment()
-    inv = Inventory(env,start_inventory)
+    inv = Inventory(env, start_inventory)
     fleet = Fleet(1,C_LIST,C_NAMES ,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
@@ -73,15 +74,7 @@ def run():
     Workshop.Ndone = 0
     env = None
 
-    return out_v
-
-def main():
-    """Main function to be runned."""
-
-    #<<<<<<< HEAD
-    #   printer.welcome() # Welcome message
-
-    r = run()
+    r = out_v
 
     my_file = open('data.csv', 'a')
     my_line = ""
