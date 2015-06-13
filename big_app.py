@@ -57,10 +57,10 @@ class Simulation(object):
         f.close()
 
         for i in range(self.replications):
-            execfile('app.py')
+            exec(open('app.py').read())
 
-        print "end"
+        print("end")
 
 l1 = [["exponential",[10]], ["exponential", [10]]]
-s = Simulation(10,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
+s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
