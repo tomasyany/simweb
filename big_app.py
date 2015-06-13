@@ -1,4 +1,5 @@
 import sys, simpy
+import matplotlib.pyplot as plt
 from processes.inventory import Inventory
 from random_generator import RandomTime
 from processes.fleet import Fleet
@@ -61,6 +62,43 @@ class Simulation(object):
 
         print("end")
 
+    def gen_plots(self):
+        output = [[], [], []]
+        with open('data.csv') as f:
+            for idx,line in enumerate(f):
+                if idx == 0:
+                    labels = line.split(',')[:3]
+                else:
+                    aux = line.split(',')[:3]
+                    for i in range(3):
+                        output[i].append(float(aux[i]))
+
+        m1 = self.get_means(output[0])
+        m2 = self.get_means(output[1])
+        m3 = self.get_means(output[2])
+
+        self.pie_plot1(labels,[m1, m2, m3])
+
+    def get_means(self,array):
+        if len(array)==0:
+            return 0
+        else:
+            r = 0
+            for i in range(len(array)):
+                r += array[i]
+            r /= len(array)
+            return r
+
+    def pie_plot1(self, labels, sizes):
+        explode = (0.05, 0.05, 0.05)
+        colors = ['yellowgreen', 'lightskyblue', 'lightcoral']
+        plt.pie(sizes, explode = explode, labels = labels, autopct =
+        '%1.1f%%', colors=colors, shadow=True, startangle=90)
+        plt.axis('equal')
+        plt.savefig('fig1.pdf')
+
+
 l1 = [["exponential",[10]], ["exponential", [10]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
+s.gen_plots()
