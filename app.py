@@ -2,23 +2,39 @@
 
 print(sys.argv)
 # from plotter.console_printer import ConsolePrinter as printer
-def main(r):
-    """Main function to be runned."""
 
-    my_file = open('outputs/data.csv', 'a')
-    my_line = ""
-    for i in range(0, len(r)):
-        my_line += str(r[i])
-        if i<len(r)-1:
-            my_line += ","
-    my_line += "\n"
-    my_file.write(my_line)
-    my_file.close()
-    
-def run(TRUCKS_AMOUNT, TRUCKS_USE, C_LIST, C_NAMES, WORKSHOP_CAPACITY,
-        SIMULATION_HORIZON, start_inventory):
+
+def main():
+
+    # Constants
+    TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
+    # standing-by)
+    TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
+
+    WORKSHOP_CAPACITY = sys.argv[2]
+
+    COMPONENTS = sys.argv[3] # Number of components
+    C_NAMES = sys.argv[4]
+
+    life_dist = sys.argv[5]
+    repair_dist = sys.argv[6]
+    replacement_dist = sys.argv[7]
+
+    C_LIST =[]
+    for i in range(COMPONENTS):
+        C_LIST.append([RandomTime(life_dist[i][0],life_dist[i][1]), RandomTime(
+            repair_dist[i][0],repair_dist[i][1]), RandomTime(
+            replacement_dist[i][0], replacement_dist[i][1])])
+
+    start_inventory = {}
+    for i in range(COMPONENTS):
+        start_inventory[C_NAMES[i]] = sys.argv[8][i]
+
+    SIMULATION_HORIZON = sys.argv[9]
+
+
     env = simpy.Environment()
-    inv = Inventory(env,start_inventory)
+    inv = Inventory(env, start_inventory)
     fleet = Fleet(1,C_LIST,C_NAMES ,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
     for i in range(WORKSHOP_CAPACITY):
         w = Workshop(env)
@@ -51,40 +67,8 @@ def run(TRUCKS_AMOUNT, TRUCKS_USE, C_LIST, C_NAMES, WORKSHOP_CAPACITY,
     Workshop.Ndone = 0
     env = None
 
-    return out_v
 
-
-
-# Constants
-TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
-# standing-by)
-TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
-
-WORKSHOP_CAPACITY = sys.argv[2]
-
-COMPONENTS = sys.argv[3] # Number of components
-C_NAMES = sys.argv[4]
-
-life_dist = sys.argv[5]
-repair_dist = sys.argv[6]
-replacement_dist = sys.argv[7]
-
-C_LIST =[]
-start_inventory = {}
-
-for i in range(COMPONENTS):
-    C_LIST.append([RandomTime(life_dist[i][0],life_dist[i][1]), RandomTime(
-        repair_dist[i][0],repair_dist[i][1]), RandomTime(replacement_dist[i][0],
-                    replacement_dist[i][1])])
-
-    start_inventory[C_NAMES[i]] = sys.argv[8][i]
-
-
-SIMULATION_HORIZON = sys.argv[9]
-
-r = run(TRUCKS_AMOUNT, TRUCKS_USE, C_LIST, C_NAMES, WORKSHOP_CAPACITY,
-        SIMULATION_HORIZON, start_inventory)
-main(r) 
+    r = out_v
 
 
 
