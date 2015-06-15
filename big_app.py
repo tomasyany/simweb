@@ -1,5 +1,11 @@
 import sys
 
+import simpy
+from processes.workshop import Workshop
+from random_generator import RandomTime
+from processes.fleet import Fleet
+from processes.inventory import Inventory
+
 class Simulation(object):
 
     def __init__(self, replications, total_trucks, design_number,
@@ -47,12 +53,12 @@ class Simulation(object):
                     self.replacement_dist_parameters,self.start_inventory,
                     self.simulation_horizon]
 
-        f = open('data.csv', 'w')
+        f = open('outputs/data.csv', 'w')
         f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,'
         'Vehiculos reparados\n')
         f.close()
 
         for i in range(self.replications):
-            execfile('app.py')
-
-        print "end"
+            with open("app.py") as f:
+                code = compile(f.read(), "app.py", 'exec')
+                exec(code)

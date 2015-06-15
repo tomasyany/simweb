@@ -1,44 +1,22 @@
 """The app runs from here."""
 
-import sys
-import simpy
-from processes.workshop import Workshop
-from random_generator import RandomTime
-from processes.fleet import Fleet
-from processes.inventory import Inventory
-
+print(sys.argv)
 # from plotter.console_printer import ConsolePrinter as printer
+def main(r):
+    """Main function to be runned."""
 
-
-# Constants
-TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
-# standing-by)
-TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
-
-WORKSHOP_CAPACITY = sys.argv[2]
-
-COMPONENTS = sys.argv[3] # Number of components
-C_NAMES = sys.argv[4]
-
-life_dist = sys.argv[5]
-repair_dist = sys.argv[6]
-replacement_dist = sys.argv[7]
-
-C_LIST =[]
-for i in range(COMPONENTS):
-    C_LIST.append([RandomTime(life_dist[0],life_dist[1]), RandomTime(
-        repair_dist[0],repair_dist[1]), RandomTime(replacement_dist[0],
-                    replacement_dist[1])])
-
-start_inventory = {}
-for i in range(COMPONENTS):
-    start_inventory[C_NAMES[i]] = sys.argv[8][i]
-
-
-SIMULATION_HORIZON = sys.argv[9]
-
-
-def run():
+    my_file = open('outputs/data.csv', 'a')
+    my_line = ""
+    for i in range(0, len(r)):
+        my_line += str(r[i])
+        if i<len(r)-1:
+            my_line += ","
+    my_line += "\n"
+    my_file.write(my_line)
+    my_file.close()
+    
+def run(TRUCKS_AMOUNT, TRUCKS_USE, C_LIST, C_NAMES, WORKSHOP_CAPACITY,
+        SIMULATION_HORIZON, start_inventory):
     env = simpy.Environment()
     inv = Inventory(env,start_inventory)
     fleet = Fleet(1,C_LIST,C_NAMES ,TRUCKS_AMOUNT,TRUCKS_USE,env,inv)
@@ -75,23 +53,38 @@ def run():
 
     return out_v
 
-def main():
-    """Main function to be runned."""
 
-    #<<<<<<< HEAD
-    #   printer.welcome() # Welcome message
 
-    r = run()
+# Constants
+TRUCKS_AMOUNT = sys.argv[0] # Total number of trucks (in use, at workshop or
+# standing-by)
+TRUCKS_USE = sys.argv[1] # Required number of trucks in use at the same time
 
-    my_file = open('data.csv', 'a')
-    my_line = ""
-    for i in range(0, len(r)):
-        my_line += str(r[i])
-        if i<len(r)-1:
-            my_line += ","
-    my_line += "\n"
-    my_file.write(my_line)
-    my_file.close()
+WORKSHOP_CAPACITY = sys.argv[2]
 
-if __name__ == "__main__":
-    main()
+COMPONENTS = sys.argv[3] # Number of components
+C_NAMES = sys.argv[4]
+
+life_dist = sys.argv[5]
+repair_dist = sys.argv[6]
+replacement_dist = sys.argv[7]
+
+C_LIST =[]
+start_inventory = {}
+
+for i in range(COMPONENTS):
+    C_LIST.append([RandomTime(life_dist[i][0],life_dist[i][1]), RandomTime(
+        repair_dist[i][0],repair_dist[i][1]), RandomTime(replacement_dist[i][0],
+                    replacement_dist[i][1])])
+
+    start_inventory[C_NAMES[i]] = sys.argv[8][i]
+
+
+SIMULATION_HORIZON = sys.argv[9]
+
+r = run(TRUCKS_AMOUNT, TRUCKS_USE, C_LIST, C_NAMES, WORKSHOP_CAPACITY,
+        SIMULATION_HORIZON, start_inventory)
+main(r) 
+
+
+
