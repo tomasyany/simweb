@@ -69,6 +69,16 @@ def main():
 
     r = out_v
 
+    my_file = open('data.csv', 'a')
+    my_line = ""
+    for i in range(0, len(r)):
+        my_line += str(r[i])
+        if i<len(r)-1:
+            my_line += ","
+    my_line += "\n"
+    my_file.write(my_line)
+    my_file.close()
+
 
 if __name__ == "__main__":
     main()
