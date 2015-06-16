@@ -1,7 +1,6 @@
 """The app runs from here."""
 
 print(sys.argv)
-# from plotter.console_printer import ConsolePrinter as printer
 
 
 def main():
@@ -71,4 +70,5 @@ def main():
     r = out_v
 
 
-
+if __name__ == "__main__":
+    main()

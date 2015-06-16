@@ -14,8 +14,7 @@ app = Flask (__name__)
 
 @app.route ('/')
 def home():
-  name = 'Tomás'
-  return render_template('welcome.html', name=name)
+  return render_template('welcome.html')
 
 @app.route ('/form', methods=['GET', 'POST'])
 def form(): 
@@ -74,7 +73,7 @@ def form():
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
                  simulation_horizon)
-      my_sim.run()
+      my_sim.run_simulation()
       
       return redirect('/results1')
   return render_template('form.html', title='Setup', form=form)

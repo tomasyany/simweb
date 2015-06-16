@@ -1,15 +1,11 @@
-import sys, simpy
-import matplotlib.pyplot as plt
-from processes.inventory import Inventory
-from random_generator import RandomTime
-from processes.fleet import Fleet
-from processes.workshop import Workshop
-
+import sys
 import simpy
+import matplotlib.pyplot as plt
+
+from processes.inventory import Inventory
+from processes.fleet import Fleet
 from processes.workshop import Workshop
 from random_generator import RandomTime
-from processes.fleet import Fleet
-from processes.inventory import Inventory
 
 class Simulation(object):
 
@@ -70,7 +66,7 @@ class Simulation(object):
 
     def gen_plots(self):
         output = [[], [], []]
-        with open('data.csv') as f:
+        with open('outputs/data.csv') as f:
             for idx,line in enumerate(f):
                 if idx == 0:
                     labels = line.split(',')[:3]
@@ -103,8 +99,6 @@ class Simulation(object):
         plt.axis('equal')
         plt.savefig('fig1.pdf')
 
-
 l1 = [["exponential",[10]], ["exponential", [10]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
-s.gen_plots()
