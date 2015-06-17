@@ -1,4 +1,4 @@
-import sys, simpy
+import simpy
 import matplotlib.pyplot as plt
 from processes.inventory import Inventory
 from random_generator import RandomTime
@@ -159,7 +159,7 @@ class Simulation(object):
         plt.pie(sizes, explode = explode, labels = labels, autopct =
         '%1.1f%%', colors=colors, shadow=True, startangle=90)
         plt.axis('equal')
-        plt.savefig('fig1.pdf')
+        plt.savefig('fig1.png')
 
 
 l1 = [["exponential",[10]], ["exponential", [10]]]

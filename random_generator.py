@@ -2,13 +2,13 @@ from numpy import random
 
 class RandomTime(object):
     # This class is used to generate random numbers following a defined distribution
-    def __init__(self,distribution,*parameters):
+    def __init__(self,distribution, parameters):
         self.dist = distribution
         self.params = parameters
 
     def getInstance(self):
         dist = self.dist
-        p = self.params[0]
+        p = self.params
         if dist == 'exponential':
             return random.exponential(p[0])
         elif dist == 'normal':
