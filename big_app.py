@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from numpy import random
 
 from processes.inventory import Inventory
-from random_generator import RandomTime
 from processes.fleet import Fleet
 from processes.workshop import Workshop
 
