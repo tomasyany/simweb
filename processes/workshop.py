@@ -41,7 +41,7 @@ class Workshop(object):
             # Step 1: wait until the required event has been triggered
             yield self.required
             self.required = self.env.event()
-            print('Workshop # %d has been required at %d' %(self.id,
+            print('Workshop # %d has been required at %f' %(self.id,
                                                             self.env.now))
             # Remove this workshop from the idle list
             Workshop.Idle.remove(self)
@@ -67,10 +67,10 @@ class Workshop(object):
         yield truck.got_component
         truck.got_component = self.env.event()
         # wait for the repair job to be done
-        print('Workshop # %d has begun repair process on truck # %d at %d' %(
+        print('Workshop # %d has begun repair process on truck # %d at %f' %(
             self.id, truck.id, self.env.now))
         yield self.env.timeout(truck.comp_repair_time)
-        print('Truck # %d was repaired by workshop # %d at %d' % (
+        print('Truck # %d was repaired by workshop # %d at %f' % (
             truck.id, self.id, self.env.now))
         # Trigger the repair event: it tells the truck it's been
         # repaired

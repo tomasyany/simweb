@@ -1,9 +1,12 @@
 import simpy
 import matplotlib.pyplot as plt
+from numpy import random
 
 from processes.inventory import Inventory
 from processes.fleet import Fleet
 from processes.workshop import Workshop
+
+from random_generator import RandomTime
 
 class Simulation(object):
 
@@ -47,13 +50,13 @@ class Simulation(object):
     def run_simulation(self):
 
         # create the output file
-        f = open('data.csv', 'w')
+        f = open('outputs/data.csv', 'w')
         f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,Vehiculos '
                 'reparados\n')
         f.close()
 
         for rep in range(self.replications):
-
+            random.seed(rep)
             # create a list containing all component objects
             c_list = []
 
@@ -114,7 +117,7 @@ class Simulation(object):
 
             r = out_v
 
-            my_file = open('data.csv', 'a')
+            my_file = open('outputs/data.csv', 'a')
             my_line = ""
             for i in range(0, len(r)):
                 my_line += str(r[i])
@@ -161,7 +164,7 @@ class Simulation(object):
         plt.axis('equal')
         plt.savefig('fig1.png')
 
-l1 = [["exponential",[10]], ["exponential", [10]]]
+l1 = [["poisson", [0.5]], ["poisson", [0.5]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
 s.gen_plots()

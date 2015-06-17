@@ -35,7 +35,7 @@ def form():
       replacement_dist_parameters = []
       start_inventory = []
       for i in range(0, n_components):
-        if i < 1:
+        if i == 0:
           aux_comp_name = data['component_name']
           comp_names.append(aux_comp_name)
 
@@ -67,11 +67,21 @@ def form():
           aux = int(data['initial_stock_'+str(i)])
           start_inventory.append(aux)
 
-      my_sim = Simulation(replications, total_trucks, design_number,
-                 workshop_capacity, n_components, comp_names,
-                 life_dist_parameters, repair_dist_parameters,
-                 replacement_dist_parameters, start_inventory,
-                 simulation_horizon)
+      # l1 = [["exponential",[10]], ["exponential", [10]]]
+      l2 = [["poisson", [0.3]], ["poisson", [0.3]]]
+      # my_sim = Simulation(60,5,2,1,2,["qw", "as"],l2,l2,l2,[1, 1],600)
+      # my_sim = Simulation(30,3,2,2,2,["c1", "c2"],l2,l2,l2,[1, 1], 365)
+      # print(replications, total_trucks, design_number,
+      #            workshop_capacity, n_components, comp_names,
+      #            life_dist_parameters, repair_dist_parameters,
+      #            replacement_dist_parameters, start_inventory,
+      #            simulation_horizon)
+
+      # my_sim = Simulation(replications, total_trucks, design_number,
+      #            workshop_capacity, n_components, comp_names,
+      #            life_dist_parameters, repair_dist_parameters,
+      #            replacement_dist_parameters, start_inventory,
+      #            simulation_horizon)
       my_sim.run_simulation()
       
       return redirect('/results1')
