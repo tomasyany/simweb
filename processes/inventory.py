@@ -14,7 +14,9 @@ class Inventory(object):
         # component is a dictionary where they key indicates the component's
         # type and the value is equal to the initial inventory for this
         # component.
-        self.components = start_inventory
+        self.components = {}
+        for k,v in start_inventory.iteritems():
+            self.components[k] = v
 
         # queue is a dictionary where the key indicates the component's type
         # and the value is list of trucks waiting for this component

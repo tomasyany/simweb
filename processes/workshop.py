@@ -25,7 +25,7 @@ class Workshop(object):
         # Tell simpy to add this workshop's run() process
         self.action = env.process(self.run())
 
-        Workshop.Idle.append(self) # all workshops start as idle
+        Workshop.Idle.append(self)  # all workshops start as idle
 
         # The required event is triggered when this workshop is idle and
         # there is an incoming repair request

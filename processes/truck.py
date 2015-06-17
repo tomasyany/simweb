@@ -177,5 +177,6 @@ class Truck(object):
         else:
             self.standby_time += self.env.now - self.repair_time
             self.repair_time = self.env.now
+
         return [self.working_time, self.off_time, self.standby_time]
 
