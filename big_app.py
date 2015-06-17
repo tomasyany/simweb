@@ -1,11 +1,9 @@
-import sys
 import simpy
 import matplotlib.pyplot as plt
 
 from processes.inventory import Inventory
 from processes.fleet import Fleet
 from processes.workshop import Workshop
-from random_generator import RandomTime
 
 class Simulation(object):
 
@@ -47,20 +45,84 @@ class Simulation(object):
         self.simulation_horizon = simulation_horizon
 
     def run_simulation(self):
-        sys.argv = [self.total_trucks, self.design_number,
-                    self.workshop_capacity, self.n_components,
-                    self.comp_names, self.life_dist_parameters,
-                    self.repair_dist_parameters,
-                    self.replacement_dist_parameters,self.start_inventory,
-                    self.simulation_horizon]
 
-        f = open('outputs/data.csv', 'w')
-        f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,'
-        'Vehiculos reparados\n')
+        # create the output file
+        f = open('data.csv', 'w')
+        f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,Vehiculos '
+                'reparados\n')
         f.close()
 
-        for i in range(self.replications):
-            exec(open('app.py').read())
+        for rep in range(self.replications):
+
+            # create a list containing all component objects
+            c_list = []
+
+            for i in range(self.n_components):
+                c_list.append([RandomTime(self.life_dist_parameters[i][0],
+                                          self.life_dist_parameters[i][1]),
+                               RandomTime(self.repair_dist_parameters[i][0],
+                                          self.repair_dist_parameters[i][1]),
+                               RandomTime(self.replacement_dist_parameters[i][0],
+                                          self.replacement_dist_parameters[i][1])])
+
+            # define the initial inventory as a dictionary
+            start_inventory = {}
+            for i in range(self.n_components):
+                start_inventory[self.comp_names[i]] = self.start_inventory[i]
+
+            # create simpy environment
+            env = simpy.Environment()
+            # create a new inventory
+            inv = Inventory(env, start_inventory)
+            # create a new fleet
+            fleet = Fleet(1, c_list, self.comp_names, self.total_trucks,
+                          self.design_number, env, inv)
+            # create workshops
+            for i in range(self.workshop_capacity):
+                w = Workshop(env)
+
+            # run simulation
+            env.run(until=self.simulation_horizon)
+            print('Simulation finished at %d' % env.now)
+
+            # get outputs
+            mean_times = fleet.get_mean_times()
+            out_v = [float(mean_times[0])/env.now, float(mean_times[1])/env.now,
+                     float(mean_times[2])/env.now]
+            out_v.append(Workshop.Ndone)
+
+            # print results
+            print('I: Active time proportion = %f' % out_v[0])
+            print('I: Off time proportion = %f' % out_v[1])
+            print('I: Stand-by time proportion = %f' % out_v[2])
+            print('I: Repaired trucks = %f' % out_v[3])
+
+            # Restart environment variables
+            env.event = None
+            env.all_of = None
+            env._active_proc = None
+            env._queue = []
+            env.any_of = None
+            env._eid = None
+            Workshop.Busy = []
+            Workshop.Idle = []
+            Workshop.Queue_1 = []
+            Workshop.Queue_2 = []
+            Workshop.next_id = 1
+            Workshop.Ndone = 0
+            env = None
+
+            r = out_v
+
+            my_file = open('data.csv', 'a')
+            my_line = ""
+            for i in range(0, len(r)):
+                my_line += str(r[i])
+                if i<len(r)-1:
+                    my_line += ","
+            my_line += "\n"
+            my_file.write(my_line)
+            my_file.close()
 
         print("end")
 
@@ -79,7 +141,7 @@ class Simulation(object):
         m2 = self.get_means(output[1])
         m3 = self.get_means(output[2])
 
-        self.pie_plot1(labels,[m1, m2, m3])
+        self.pie_plot1(labels, [m1, m2, m3])
 
     def get_means(self,array):
         if len(array)==0:
@@ -97,8 +159,9 @@ class Simulation(object):
         plt.pie(sizes, explode = explode, labels = labels, autopct =
         '%1.1f%%', colors=colors, shadow=True, startangle=90)
         plt.axis('equal')
-        plt.savefig('fig1.pdf')
+        plt.savefig('fig1.png')
 
 l1 = [["exponential",[10]], ["exponential", [10]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
+s.gen_plots()

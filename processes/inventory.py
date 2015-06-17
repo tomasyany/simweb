@@ -14,7 +14,9 @@ class Inventory(object):
         # component is a dictionary where they key indicates the component's
         # type and the value is equal to the initial inventory for this
         # component.
-        self.components = start_inventory
+        self.components = {}
+        for k,v in start_inventory.items():
+            self.components[k] = v
 
         # queue is a dictionary where the key indicates the component's type
         # and the value is list of trucks waiting for this component
@@ -45,4 +47,3 @@ class Inventory(object):
             T.got_component.succeed()
         else:
             self.components[c_type] += 1
-

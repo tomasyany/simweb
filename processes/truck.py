@@ -127,6 +127,7 @@ class Truck(object):
         # The failure method. It checks whether there are trucks in stand-by
         # to replace the failing truck
         print('Truck # %d stopped working at %d' % (self.id, self.env.now))
+
         # Send the truck to the workshop's queue
         Workshop.Queue_2.append(self)
         print('Truck # %d has entered queue 2 at %d' % (self.id, self.env.now))
@@ -177,5 +178,6 @@ class Truck(object):
         else:
             self.standby_time += self.env.now - self.repair_time
             self.repair_time = self.env.now
+
         return [self.working_time, self.off_time, self.standby_time]
 
