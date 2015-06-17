@@ -164,7 +164,7 @@ class Simulation(object):
         plt.axis('equal')
         plt.savefig('fig1.png')
 
-l1 = [["poisson", [0.5]], ["poisson", [0.5]]]
-s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
-s.run_simulation()
-s.gen_plots()
+# l1 = [["poisson", [0.5]], ["poisson", [0.5]]]
+# s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
+# s.run_simulation()
+# s.gen_plots()
