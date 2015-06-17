@@ -38,7 +38,7 @@ class Inventory(object):
         # inventory
             self.components[c_type] -= 1
             print('Truck # %d has taken a component of type %s from '
-                  'inventory at %d' %(truck.id, c_type, self.env.now))
+                  'inventory at %f' %(truck.id, c_type, self.env.now))
             truck.got_component.succeed()
         else: #if there are no components in inventory
             self.queue[c_type].append(truck)
@@ -50,7 +50,7 @@ class Inventory(object):
         if self.queue[c_type] != []:
             T = self.queue[c_type].pop(0)
             print('Truck # %d has taken a component of type %s from '
-                  'inventory at %d' %(T.id, c_type, self.env.now))
+                  'inventory at %f' %(T.id, c_type, self.env.now))
             T.got_component.succeed()
         else:
             self.components[c_type] += 1

@@ -66,7 +66,7 @@ class Component(object):
             try:
                 # wait time_left
                 yield self.env.timeout(self.time_left)
-                print('Component # %d of Truck # %d has failed at %d' %(
+                print('Component # %d of Truck # %d has failed at %f' %(
                     self.id, self.truck.id, self.env.now))
 
                 # set time_left to a new random value

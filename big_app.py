@@ -2,10 +2,14 @@
 
 import simpy
 import matplotlib.pyplot as plt
+from numpy import random
+
 from processes.inventory import Inventory
 from random_generator import RandomTime
 from processes.fleet import Fleet
 from processes.workshop import Workshop
+
+from random_generator import RandomTime
 
 class Simulation(object):
 
@@ -52,14 +56,14 @@ class Simulation(object):
         m_step = 1
 
         # create the output file
-        f = open('data.csv', 'w')
+        f = open('outputs/data.csv', 'w')
         f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,'
                 'Tiempo en cola 1,Tiempo en cola 2,Tiempo en taller,Vehiculos '
                 'reparados\n')
         f.close()
 
         for rep in range(self.replications):
-
+            random.seed(rep)
             # create a list containing all component objects
             c_list = []
 
@@ -128,7 +132,7 @@ class Simulation(object):
 
             r = out_v
 
-            my_file = open('data.csv', 'a')
+            my_file = open('outputs/data.csv', 'a')
             my_line = ""
             for i in range(0, len(r)):
                 my_line += str(r[i])
@@ -140,7 +144,7 @@ class Simulation(object):
 
         trucks_header = ["Vehículos activos", "Vehículos en reparación",
                          "Vehículos en stand-by"]
-        trucks_file_name = "trucks_over_time.csv"
+        trucks_file_name = "outputs/trucks_over_time.csv"
         self.print_output_to_file(fleet.trucks_count, trucks_header, trucks_file_name)
 
         print("end")
@@ -172,7 +176,7 @@ class Simulation(object):
 
     def gen_plots(self):
         output = [[], [], []]
-        with open('data.csv') as f:
+        with open('outouts/data.csv') as f:
             for idx,line in enumerate(f):
                 if idx == 0:
                     labels = line.split(',')[:3]

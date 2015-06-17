@@ -95,7 +95,7 @@ class Truck(object):
             self.standby_time += self.env.now-self.repair_time
             self.start_time = self.env.now
 
-            print('Truck # %d started working at %d' %(self.id, self.env.now))
+            print('Truck # %d started working at %f' %(self.id, self.env.now))
 
             # Step 2: wait until the fail_event is triggered by one the
             # truck's components
@@ -132,11 +132,11 @@ class Truck(object):
     def failure(self):
         # The failure method. It checks whether there are trucks in stand-by
         # to replace the failing truck
-        print('Truck # %d stopped working at %d' % (self.id, self.env.now))
+        print('Truck # %d stopped working at %f' % (self.id, self.env.now))
 
         # Send the truck to the workshop's queue
         Workshop.Queue_2.append(self)
-        print('Truck # %d has entered queue 2 at %d' % (self.id, self.env.now))
+        print('Truck # %d has entered queue 2 at %f' % (self.id, self.env.now))
         self.inventory.request_component(self)
         if self.fleet.stand_by_trucks != []:
             truck = self.fleet.stand_by_trucks.pop(0)
@@ -156,7 +156,7 @@ class Truck(object):
                 # self.insert_in_order()
                 self.l_q2_time = self.env.now
                 self.t_queue2_time += self.env.now - self.failure_time
-                print('Truck # %d has entered queue 1 at %d' % (self.id,
+                print('Truck # %d has entered queue 1 at %f' % (self.id,
                       self.env.now))
 
     def insert_in_order(self):
