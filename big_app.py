@@ -97,7 +97,6 @@ class Simulation(object):
             print('I: Stand-by time proportion = %f' % out_v[2])
             print('I: Repaired trucks = %f' % out_v[3])
 
-
             # Restart environment variables
             env.event = None
             env.all_of = None
