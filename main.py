@@ -21,7 +21,6 @@ def form():
   form = SimForm(request.form)
   if request.method == 'POST' and form.validate():
       data = request.form
-      print(data)
 
       replications = int(data['replications'])
       total_trucks = int(data['trucks_amount'])
