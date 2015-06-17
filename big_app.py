@@ -175,7 +175,7 @@ class Simulation(object):
 
     def gen_plots(self):
         output = [[], [], []]
-        with open('outouts/data.csv') as f:
+        with open('outputs/data.csv') as f:
             for idx,line in enumerate(f):
                 if idx == 0:
                     labels = line.split(',')[:3]
