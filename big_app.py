@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import simpy
 import matplotlib.pyplot as plt
 from processes.inventory import Inventory
@@ -46,9 +48,13 @@ class Simulation(object):
 
     def run_simulation(self):
 
+        # set the monitoring time step
+        m_step = 1
+
         # create the output file
         f = open('data.csv', 'w')
-        f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,Vehiculos '
+        f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,'
+                'Tiempo en cola 1,Tiempo en cola 2,Tiempo en taller,Vehiculos '
                 'reparados\n')
         f.close()
 
@@ -73,29 +79,37 @@ class Simulation(object):
             # create simpy environment
             env = simpy.Environment()
             # create a new inventory
-            inv = Inventory(env, start_inventory)
+            inv = Inventory(env, start_inventory, m_step)
             # create a new fleet
             fleet = Fleet(1, c_list, self.comp_names, self.total_trucks,
-                          self.design_number, env, inv)
+                          self.design_number, env, inv, m_step)
             # create workshops
             for i in range(self.workshop_capacity):
-                w = Workshop(env)
+                w = Workshop(env, m_step)
 
             # run simulation
             env.run(until=self.simulation_horizon)
             print('Simulation finished at %d' % env.now)
 
             # get outputs
-            mean_times = fleet.get_mean_times()
-            out_v = [float(mean_times[0])/env.now, float(mean_times[1])/env.now,
-                     float(mean_times[2])/env.now]
+            out = fleet.get_mean_times()
+            mean_times = out[0]
+            mean_off_times = out[1]
+
+            out_v = mean_times + mean_off_times
+            for i in range(len(out_v)):
+                out_v[i] = float(out_v[i])/env.now
+
             out_v.append(Workshop.Ndone)
 
             # print results
             print('I: Active time proportion = %f' % out_v[0])
             print('I: Off time proportion = %f' % out_v[1])
             print('I: Stand-by time proportion = %f' % out_v[2])
-            print('I: Repaired trucks = %f' % out_v[3])
+            print('I: Queue 1 time proportion = %f' % out_v[3])
+            print('I: Queue 2 time proportion = %f' % out_v[4])
+            print('I: Workshop time proportion = %f' % out_v[5])
+            print('I: Repaired trucks = %f' % out_v[6])
 
             # Restart environment variables
             env.event = None
@@ -124,7 +138,37 @@ class Simulation(object):
             my_file.write(my_line)
             my_file.close()
 
+        trucks_header = ["Vehículos activos", "Vehículos en reparación",
+                         "Vehículos en stand-by"]
+        trucks_file_name = "trucks_over_time.csv"
+        self.print_output_to_file(fleet.trucks_count, trucks_header, trucks_file_name)
+
         print("end")
+
+    def print_output_to_file(self, output, headers, file_name):
+        f = open(file_name, 'w')
+        columns = len(output)
+        length = len(output[0])
+
+        line = ""
+        for i in range(columns):
+            line += headers[i]
+            if i < columns-1:
+                line += ","
+            else:
+                line += "\n"
+
+        for row in range(length):
+            for col in range(columns):
+                line += str(output[col][row])
+                if col < columns-1:
+                    line += ","
+                elif row < length-1:
+                    line += "\n"
+
+        f.write(line)
+        f.close()
+
 
     def gen_plots(self):
         output = [[], [], []]

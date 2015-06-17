@@ -1,7 +1,5 @@
 """This class represents the components inventory."""
 
-from simpy import Container
-
 class Inventory(object):
     """An inventory has an initial stock for each of the components.
 
@@ -9,14 +7,23 @@ class Inventory(object):
     for reposition. We call this politic one-to-one.
     """
 
-    def __init__(self, env, start_inventory):
+    def __init__(self, env, start_inventory, mon_step):
         self.env = env
         # component is a dictionary where they key indicates the component's
         # type and the value is equal to the initial inventory for this
         # component.
         self.components = {}
-        for k,v in start_inventory.items():
+        for k, v in start_inventory.items():
             self.components[k] = v
+
+        self.monitor_step = mon_step  # monitoring time step
+
+        # inventory disp stores the amount of components in inventory
+        self.inventory_disp = {}
+        for k in self.components.keys():
+            self.inventory_disp[k] = []
+
+        self.monitor_process = self.env.process(self.monitor_inventory())
 
         # queue is a dictionary where the key indicates the component's type
         # and the value is list of trucks waiting for this component
@@ -47,3 +54,10 @@ class Inventory(object):
             T.got_component.succeed()
         else:
             self.components[c_type] += 1
+
+    def monitor_inventory(self):
+        while True:
+            for k in self.inventory_disp.keys():
+                self.inventory_disp[k].append(self.components[k])
+
+            yield self.env.timeout(self.monitor_step)
