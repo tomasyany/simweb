@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="width:100%; text-align:center; padding-top: 60px;" class="wrap">
+  <div class="jumbotron">
+    <h1>¡ Bienvenido a <strong>Car Simulator</strong> !</h1>
+    <br>
+    <p  class="lead">En esta aplicación podrás simular una flota de vehículos y su taller de reparaciones respectivo. 
+    <br>
+    La flota es personalizable en cantidad de componentes y en probabilidades de falla y tiempo de reparación de cada una.</p>
+  </div>
+  
+  <div class="wrap">
+  <span class="glyphicon glyphicon-road" aria-hidden="true"></span>
+  <br>
+    <a type="button" class="btn btn-lg btn-block btn-danger" href="/form">
+      <h4>COMENZAR</h4>
+    </a>
+  </div>
+</div>  
+{% endblock %}

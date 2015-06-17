@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+
+<h1  style="text-align:center">Setup</h1>
+<form action="/form" method="post">
+<div  class="jumbotron" id="todo" style="float:left;width:100%;">
+  
+  <div name="general" class="medWidth" style="float:left;">
+
+    <h3 style="text-align: center;">Setup General</h3>
+
+    <div class="form-group">
+      {{ form.sim_name(class_="form-control", placeholder="Nombre simulación", type="text")  }}
+    </div>
+
+    <div class="form-group">
+      {{ form.replications(class_="form-control", placeholder="Cantidad de réplicas", type="number")  }}
+    </div>
+
+    <div class="form-group">
+      {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte (horas)", type="number")  }}
+    </div>
+
+    <div class="form-group">
+      {{ form.trucks_amount(class_="form-control", placeholder="Flota total", type="number")  }}
+    </div>
+
+    <div class="form-group">
+      {{ form.trucks_use(class_="form-control", placeholder="Flota en uso", type="number")  }}
+    </div>  
+
+    <div  class="form-group">
+      {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad taller", type="number")  }}
+    </div>
+
+    <div class="form-group">
+      {{ form.components(class_="form-control", placeholder="Cantidad componentes", type="number", onchange="addFields()")  }}
+    </div>
+
+  </div>
+  
+  <div class="bigWidth" style="float:right;">
+    <div class="settings" style="width:15%; float:left; padding-right: 8px;">
+      <h3 style="text-align: center;">Componente</h3>
+      <div id="componente" class="form-group" style="width:100%; margin: 0 auto;">
+      </div>
+    </div>
+    <div class="settings" style="float:left;padding-right: 8px;">
+    <h3 style="text-align: center;">Fallas</h3>
+      <div id="fallas" class="form-group" style=" width:100%;  margin: 0 auto;">
+      </div>
+    </div>
+    <div class="settings" style="padding-right: 8px;">
+    <h3 style="text-align: center;">Reposición</h3>
+      <div id="reemplazo" class="form-group" style="float:left; width:100%; margin: 0 auto;">
+      </div>
+    </div>
+    <div class="settings" style="width:15%; padding-right: 8px;">
+    <h3 style="text-align: center;">Inventario</h3>
+      <div id="inventario" class="form-group" style="float:left; margin: 0 auto; width:100%;">
+      </div>
+    </div>
+    <div class="settings" >
+    <h3 style="text-align: center;">Reparación</h3>
+      <div id="taller" class="form-group" style="margin: 0 auto; width:100%;">
+      </div>
+    </div>
+  </div>
+    
+</div>
+  <!-- <input type="submit" class="btn btn-danger" style="float:right;" value="SIMULAR"> -->
+  <button type="submit" class="btn btn-block btn-danger">
+    <h4>SIMULAR</h4>
+  </button>
+</form>
+
+<template id="componente-template">
+  <div class="form-group">
+    {{ form.component_name(class="form-control", placeholder="Nombre", type="text", id="component_name") }}
+  </div>
+</template>
+
+<template id="fallas-template">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
+      {{ form.failure_distr(class="form-control", type="text", id="failure_distr") }}
+    </div>
+    <div style="margin-left: 125px;">
+      {{ form.failure_param(class="form-control", placeholder="Parámetros",type="number", id="failure_param") }}
+    </div>
+  </div>
+</template>
+
+<template id="reemplazo-template">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
+      {{ form.repl_distr(class="form-control", type="text", id="repl_distr") }}
+    </div>
+    <div style="margin-left: 125px;">
+      {{ form.repl_param(class="form-control", placeholder="Parámetros", type="number", id="repl_param") }}
+    </div>
+  </div>
+</template>
+
+<template id="inventario-template">
+  <div class="form-group">
+    {{ form.initial_stock(class="form-control", placeholder="Stock inicial", type="number", id="initial_stock") }}
+  </div>
+</template>
+
+<template id="taller-template">
+  <div class="form-group" style="overflow: hidden;">
+    <div style="width: 120px; float: left;">
+      {{ form.work_distr(class="form-control", type="text", id="work_distr") }}
+    </div>
+    <div style="margin-left: 125px;">
+      {{ form.work_param(class="form-control", placeholder="Parámetros", type="number", id="work_param") }}
+    </div>
+  </div>
+</template>
+
+<!-- {% for message in form.sim_name.errors %}
+  <div class="flash"> sim_name{{ message }}</div>
+{% endfor %}
+{% for message in form.replications.errors %}
+  <div class="flash"> replications{{ message }}</div>
+{% endfor %}
+{% for message in form.simulation_horizon.errors %}
+  <div class="flash"> simulation_horizon{{ message }}</div>
+{% endfor %}
+{% for message in form.trucks_amount.errors %}
+  <div class="flash">trucks_amount{{ message }}</div>
+{% endfor %}
+{% for message in form.trucks_use.errors %}
+  <div class="flash"> trucks_use{{ message }}</div>
+{% endfor %}
+{% for message in form.workshop_capacity.errors %}
+  <div class="flash"> workshop_capacity{{ message }}</div>
+{% endfor %}
+{% for message in form.components.errors %}
+  <div class="flash"> components{{ message }}</div>
+{% endfor %}
+{% for message in form.component_name.errors %}
+  <div class="flash"> component_name{{ message }}</div>
+{% endfor %}
+{% for message in form.failure_distr.errors %}
+  <div class="flash"> failure_distr{{ message }}</div>
+{% endfor %}
+{% for message in form.failure_param.errors %}
+  <div class="flash"> failure_param{{ message }}</div>
+{% endfor %}
+{% for message in form.initial_stock.errors %}
+  <div class="flash"> initial_stock{{ message }}</div>
+{% endfor %}
+{% for message in form.work_distr.errors %}
+  <div class="flash"> work_distr{{ message }}</div>
+{% endfor %}
+{% for message in form.work_param.errors %}
+  <div class="flash"> work_param{{ message }}</div>
+{% endfor %}
+{% for message in form.repl_distr.errors %}
+  <div class="flash"> repl_distr{{ message }}</div>
+{% endfor %}
+{% for message in form.repl_param.errors %}
+  <div class="flash"> repl_param{{ message }}</div>
+{% endfor %}
+
+ -->
+{% endblock %}
