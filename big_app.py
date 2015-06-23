@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import simpy
-import matplotlib.pyplot as plt
 from numpy import random
 
 from processes.inventory import Inventory
@@ -49,6 +48,37 @@ class Simulation(object):
         self.start_inventory = start_inventory
         self.simulation_horizon = simulation_horizon
 
+        # Output variables
+
+        # Total trucks repaired
+        self.total_trucks_repaired = []
+
+        # to be used in graph 1
+        self.active_proportion = []
+        self.off_proportion = []
+        self.stand_by_proportion = []
+
+        # to be used in graph 2
+        self.q2_proportion = []
+        self.q1_proportion = []
+        self.in_ws_proportion = []
+
+        # to be used in graph 3
+        self.active_2_proportion = []
+        self.total_q_proportion = []
+        self.in_ws_2_proportion = []
+        self.stand_by_2_proportion = []
+
+        # to be used in graph 4
+        self.n_active_mean = []
+        self.n_off_mean = []
+        self.n_stand_by_mean = []
+
+        # to be used in graph 5
+        self.n_q2_mean = []
+        self.n_q1_mean = []
+        self.n_in_ws_mean = []
+
     def run_simulation(self):
 
         # set the monitoring time step
@@ -94,16 +124,43 @@ class Simulation(object):
             env.run(until=self.simulation_horizon)
             print('Simulation finished at %d' % env.now)
 
-            # get outputs
+            # Get outputs
             out = fleet.get_mean_times()
             mean_times = out[0]
             mean_off_times = out[1]
 
-            out_v = mean_times + mean_off_times
-            for i in range(len(out_v)):
-                out_v[i] = float(out_v[i])/env.now
+            out = mean_times + mean_off_times
+            out_v = []
+            for i in range(len(out)):
+                out_v.append(float(out[i])/env.now)
 
-            out_v.append(Workshop.Ndone)
+            # save simulation results
+
+            self.active_proportion.append(out_v[0])
+            self.off_proportion.append(out_v[1])
+            self.stand_by_proportion.append(out_v[2])
+            self.q1_proportion.append(out_v[3])
+            self.q2_proportion.append(out_v[4])
+            self.in_ws_proportion.append(out_v[5])
+            self.total_trucks_repaired.append(Workshop.Ndone)
+
+            sum_t = out[0] + out[3] + out[4] + out[5] + out[2]
+
+            self.active_2_proportion.append(float(out[0])/sum_t)
+            self.total_q_proportion.append(float(out[0] + out[4])/sum_t)
+            self.in_ws_2_proportion.append(float(out[5])/sum_t)
+            self.stand_by_2_proportion.append(float(out[2])/sum_t)
+
+            out = fleet.get_mean_trucks()
+            mean_1 = out[0]
+            mean_2 = out[1]
+
+            self.n_active_mean.append(mean_1[0])
+            self.n_off_mean.append(mean_1[1])
+            self.n_stand_by_mean.append(mean_1[2])
+            self.n_q1_mean.append(mean_2[0])
+            self.n_q2_mean.append(mean_2[1])
+            self.n_in_ws_mean.append(mean_2[2])
 
             # print results
             print('I: Active time proportion = %f' % out_v[0])
@@ -112,7 +169,7 @@ class Simulation(object):
             print('I: Queue 1 time proportion = %f' % out_v[3])
             print('I: Queue 2 time proportion = %f' % out_v[4])
             print('I: Workshop time proportion = %f' % out_v[5])
-            print('I: Repaired trucks = %f' % out_v[6])
+            print('I: Repaired trucks = %f' % Workshop.Ndone)
 
             # Restart environment variables
             env.event = None
@@ -129,87 +186,116 @@ class Simulation(object):
             Workshop.Ndone = 0
             env = None
 
-            r = out_v
+    def print_pie_file(self):
+        file_pie = open('outputs/pie.csv', 'w')
 
-            my_file = open('outputs/data.csv', 'a')
-            my_line = ""
-            for i in range(0, len(r)):
-                my_line += str(r[i])
-                if i<len(r)-1:
-                    my_line += ","
-            my_line += "\n"
-            my_file.write(my_line)
-            my_file.close()
-
-        trucks_header = ["Vehículos activos", "Vehículos en reparación",
-                         "Vehículos en stand-by"]
-        trucks_file_name = "outputs/trucks_over_time.csv"
-        self.print_output_to_file(fleet.trucks_count, trucks_header, trucks_file_name)
-
-        print("end")
-
-    def print_output_to_file(self, output, headers, file_name):
-        f = open(file_name, 'w')
-        columns = len(output)
-        length = len(output[0])
-
+        # write first line
+        p = []
         line = ""
-        for i in range(columns):
-            line += headers[i]
-            if i < columns-1:
+        p.append(get_mean(self.active_proportion))
+        p.append(get_mean(self.off_proportion))
+        p.append(get_mean(self.stand_by_proportion))
+        for i in range(len(p)):
+            line += "{0:.2f}".format(p[i])
+            if i < (len(p) - 1):
                 line += ","
             else:
                 line += "\n"
+        file_pie.write(line)
 
-        for row in range(length):
-            for col in range(columns):
-                line += str(output[col][row])
-                if col < columns-1:
-                    line += ","
-                elif row < length-1:
-                    line += "\n"
+        # write second line
+        p = []
+        line = ""
+        p.append(get_mean(self.q2_proportion))
+        p.append(get_mean(self.q1_proportion))
+        p.append(get_mean(self.in_ws_proportion))
+        for i in range(len(p)):
+            line += "{0:.2f}".format(p[i])
+            if i < (len(p) - 1):
+                line += ","
+            else:
+                line += "\n"
+        file_pie.write(line)
 
-        f.write(line)
-        f.close()
+        # write third line
+        p = []
+        line = ""
+        p.append(get_mean(self.active_2_proportion))
+        p.append(get_mean(self.total_q_proportion))
+        p.append(get_mean(self.in_ws_2_proportion))
+        p.append(get_mean(self.stand_by_2_proportion))
+        for i in range(len(p)):
+            line += "{0:.2f}".format(p[i])
+            if i < (len(p) - 1):
+                line += ","
+            else:
+                line += "\n"
+        file_pie.write(line)
+
+        # write fourth line
+        p = []
+        line = ""
+        p.append(get_mean(self.n_active_mean))
+        p.append(get_mean(self.n_off_mean))
+        p.append(get_mean(self.n_stand_by_mean))
+        for i in range(len(p)):
+            line += "{0:.2f}".format(p[i])
+            if i < (len(p) - 1):
+                line += ","
+            else:
+                line += "\n"
+        file_pie.write(line)
+
+        # write fifth line
+        p = []
+        line = ""
+        p.append(get_mean(self.n_q2_mean))
+        p.append(get_mean(self.n_q1_mean))
+        p.append(get_mean(self.n_in_ws_mean))
+        for i in range(len(p)):
+            line += "{0:.2f}".format(p[i])
+            if i < (len(p) - 1):
+                line += ","
+            else:
+                line += "\n"
+        file_pie.write(line)
+
+        file_pie.close()
 
 
-    def gen_plots(self):
-        output = [[], [], []]
-        with open('outputs/data.csv') as f:
-            for idx,line in enumerate(f):
-                if idx == 0:
-                    labels = line.split(',')[:3]
-                else:
-                    aux = line.split(',')[:3]
-                    for i in range(3):
-                        output[i].append(float(aux[i]))
 
-        m1 = self.get_means(output[0])
-        m2 = self.get_means(output[1])
-        m3 = self.get_means(output[2])
+def print_output_to_file(output, headers, file_name):
+    f = open(file_name, 'w')
+    columns = len(output)
+    length = len(output[0])
 
-        self.pie_plot1(labels, [m1, m2, m3])
-
-    def get_means(self,array):
-        if len(array)==0:
-            return 0
+    line = ""
+    for i in range(columns):
+        line += headers[i]
+        if i < columns-1:
+            line += ","
         else:
-            r = 0
-            for i in range(len(array)):
-                r += array[i]
-            r /= len(array)
-            return r
+            line += "\n"
 
-    def pie_plot1(self, labels, sizes):
-        explode = (0.05, 0.05, 0.05)
-        colors = ['yellowgreen', 'lightskyblue', 'lightcoral']
-        plt.pie(sizes, explode = explode, labels = labels, autopct =
-        '%1.1f%%', colors=colors, shadow=True, startangle=90)
-        plt.axis('equal')
-        plt.savefig('fig1.png')
+    for row in range(length):
+        for col in range(columns):
+            line += str(output[col][row])
+            if col < columns-1:
+                line += ","
+            elif row < length-1:
+                line += "\n"
+
+    f.write(line)
+    f.close()
+
+def get_mean(array):
+    if len(array) == 0:
+        return 0
+    else:
+        return float(sum(array))/len(array)
 
 
 l1 = [["exponential",[10]], ["exponential", [10]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
-s.gen_plots()
+s.print_pie_file()

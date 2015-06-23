@@ -111,3 +111,18 @@ class Fleet(object):
         output2 = [mean_q1, mean_q2, mean_ws]
 
         return [output1, output2]
+
+    def get_mean_trucks(self):
+        mean_active = sum(self.trucks_count[0])/float(len(self.trucks_count[0]))
+        mean_off = sum(self.trucks_count[1])/float(len(self.trucks_count[1]))
+        mean_sb = sum(self.trucks_count[2])/float(len(self.trucks_count[2]))
+
+        mean_q1 = sum(self.queue_count[0])/float(len(self.queue_count[0]))
+        mean_q2 = sum(self.queue_count[1])/float(len(self.queue_count[1]))
+        mean_ws = sum(self.workshop_occupation[0])/float(len(
+            self.workshop_occupation[0]))
+
+        output1 = [mean_active, mean_off, mean_sb]
+        output2 = [mean_q1, mean_q2, mean_ws]
+
+        return [output1, output2]
