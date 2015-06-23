@@ -23,6 +23,12 @@ class Inventory(object):
         for k in self.components.keys():
             self.inventory_disp[k] = []
 
+        # inv_breaks stores [# times component was in inventory, # inventory
+        # breaks]
+        self.inv_breaks = {}
+        for name in self.components.keys():
+            self.inv_breaks[name] = [0, 0]
+
         self.monitor_process = self.env.process(self.monitor_inventory())
 
         # queue is a dictionary where the key indicates the component's type
@@ -37,11 +43,13 @@ class Inventory(object):
         if self.components[c_type] > 0: # if there are componnets left in
         # inventory
             self.components[c_type] -= 1
+            self.inv_breaks[c_type][0] += 1
             print('Truck # %d has taken a component of type %s from '
                   'inventory at %f' %(truck.id, c_type, self.env.now))
             truck.got_component.succeed()
         else: #if there are no components in inventory
             self.queue[c_type].append(truck)
+            self.inv_breaks[c_type][1] += 1
         # put an replacement order
         self.env.process(self.put_order(c_type, truck.comp_inventory_time))
 
@@ -61,3 +69,10 @@ class Inventory(object):
                 self.inventory_disp[k].append(self.components[k])
 
             yield self.env.timeout(self.monitor_step)
+
+    def get_mean_invetory(self):
+        output = {}
+        for k, v in self.inventory_disp.items():
+            output[k] = float(sum(v))/len(v)
+
+        return output

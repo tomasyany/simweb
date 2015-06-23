@@ -38,6 +38,11 @@ class Fleet(object):
         # time list
         self.time = []
 
+        # failures per component
+        self.failures = {}
+        for name in type_list:
+            self.failures[name] = 0
+
         # workshop occupation stores the amount of busy and idle workshops at
         #  every monitoring time step
         self.workshop_occupation = [[], []]

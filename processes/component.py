@@ -75,6 +75,7 @@ class Component(object):
                 self.truck.comp_inventory_time = self.distreplacement.getInstance()
                 self.truck.comp_repair_time = self.distrepair.getInstance()
                 self.truck.comp_type = self.type
+                self.truck.fleet.failures[self.type] += 1
 
                 self.truck.fail_event.succeed()    # Trigger the fail event
 

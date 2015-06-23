@@ -100,6 +100,21 @@ class Simulation(object):
         # to be used in graph 10
         self.ws_occupation = [[]]*self.workshop_capacity
 
+        # to be used in graph 11
+        self.comp_failures = {}
+        for name in self.comp_names:
+            self.comp_failures[name] = []
+
+        # to be used in graph 12
+        self.inv_prom = {}
+        for name in self.comp_names:
+            self.inv_prom[name] = []
+
+        # to be used in graph 13
+        self.inv_breaks = {}
+        for name in self.comp_names:
+            self.inv_breaks[name] = []
+
     def run_simulation(self):
 
         # set the monitoring time step
@@ -212,6 +227,19 @@ class Simulation(object):
             for idx,ws in enumerate(Workshop.All):
                 self.ws_occupation[idx].append(ws.get_occupation())
 
+            # graph 11
+            for k, v in fleet.failures.items():
+                self.comp_failures[k].append(v)
+
+            # graph 12
+            for k,v in inv.get_mean_invetory().items():
+                self.inv_prom[k].append(v)
+
+            # graph 13
+            for k, v in inv.inv_breaks.items():
+                self.inv_breaks[k].append(float(v[1])/(v[0]+v[1]))
+
+
             # print results
             print('I: Active time proportion = %f' % out_v[0])
             print('I: Off time proportion = %f' % out_v[1])
@@ -230,6 +258,7 @@ class Simulation(object):
             env._eid = None
             Workshop.Busy = []
             Workshop.Idle = []
+            Workshop.All = []
             Workshop.Queue_1 = []
             Workshop.Queue_2 = []
             Workshop.next_id = 1
@@ -356,7 +385,63 @@ class Simulation(object):
         f_14.close()
 
     def print_bars_file(self):
-        pass
+        f_b = open("outputs/bars.csv", "w")
+
+        line1 = ""
+        line2 = ""
+        for idx, list_o in enumerate(self.ws_occupation):
+            line1 += str(idx+1)
+            line2 += "{0:.2f}".format(get_mean(list_o))
+            if idx < (len(self.ws_occupation) - 1):
+                line1 += ","
+                line2 += ","
+            else:
+                line1 += "\n"
+                line2 += "\n"
+
+        f_b.write(line1+line2)
+
+        line_names = ""
+        line = ""
+        i = 0
+        for name, val_list in self.comp_failures.items():
+            line_names += name
+            line += "{0:.2f}".format(get_mean(val_list))
+            if i < (self.n_components - 1):
+                line_names += ","
+                line += ","
+            else:
+                line_names += "\n"
+                line += "\n"
+            i += 1
+
+        f_b.write(line_names + line)
+
+        line = ""
+        i = 0
+        for name, val_list in self.inv_prom.items():
+            line += "{0:.1f}".format(get_mean(val_list))
+            if i < (self.n_components - 1):
+                line += ","
+            else:
+                line += "\n"
+            i += 1
+
+        f_b.write(line_names + line)
+
+        line = ""
+        i = 0
+        for name, val_list in self.inv_breaks.items():
+            line += "{0:.2f}".format(get_mean(val_list))
+            if i < (self.n_components - 1):
+                line += ","
+            else:
+                line += "\n"
+            i += 1
+
+        f_b.write(line_names + line)
+
+        f_b.close()
 
 
 def print_output_to_file(output, headers, file_name):
@@ -391,7 +476,8 @@ def get_mean(array):
 
 
 l1 = [["exponential",[10]], ["exponential", [10]]]
-s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
+s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[2, 1], 365)
 s.run_simulation()
 s.print_pie_file()
 s.print_time_evolution_files()
+s.print_bars_file()

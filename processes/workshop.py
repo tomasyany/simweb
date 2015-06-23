@@ -29,6 +29,10 @@ class Workshop(object):
 
         # state list 1 = busy, 0 = idle
         self.state = []
+
+        # working state: 1 = busy, 0 = idle
+        self.working = 0
+
         # monitor process
         self.monitor_process = env.process(self.monitor_workshop())
 
@@ -54,6 +58,7 @@ class Workshop(object):
             # Remove this workshop from the idle list
             Workshop.Idle.remove(self)
             Workshop.Busy.append(self)
+            self.working = 1
 
             # Step 2: Repair process
             while Workshop.Queue_1 != [] or Workshop.Queue_2 != []:
@@ -74,6 +79,7 @@ class Workshop(object):
             # idle again
             Workshop.Busy.remove(self)
             Workshop.Idle.append(self)
+            self.working = 0
 
     def repair_truck(self, truck):
         # wait until the replacement component has arrived
@@ -104,10 +110,7 @@ class Workshop(object):
 
     def monitor_workshop(self):
         while True:
-            if self in Workshop.Idle():
-                self.state.append(0)
-            else:
-                self.state.append(1)
+            self.state.append(self.working)
             yield self.env.timeout(self.monitor_step)
 
     def get_occupation(self):
