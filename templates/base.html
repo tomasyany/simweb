@@ -1,7 +1,24 @@
 <html>
   
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  <script type="text/javascript">
+      $(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+  </script>
+
+  <script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+            $("#content").hide();       
+        }
+// ]]></script>
   <head>
     {% if title %}
     <title>{{ title }}</title>
@@ -107,9 +124,8 @@
                 
             }
         }
-    </script>
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    </script>
 
   </head>
   <body>

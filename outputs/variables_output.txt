@@ -1,0 +1,114 @@
+### Lista de gráficos
+
+1) Gráfico de pie con 3 variables
+	Proporción de tiempo activo
+	Proporción de tiempo en reparación
+	Proporción de tiempo en stand-by
+	
+	Output	pie.csv	línea 1	ejemplo: "0.3,0.5,0.2"
+	
+2) Gráfico de pie con 3 variables (las 3 deberían sumar el tiempo en reparación)
+	Proporción de tiempo en cola 2 (cola de espera por repuestos)
+	Proporción de tiempo en cola 1 (cola de entrada al taller)
+	Proporción de tiempo dentro del taller
+	
+	Output pie.csv	línea 2
+	
+3) Gráfico de pie con 4 variables
+	Proporción de tiempo activo
+	Proporción de tiempo en cola (cola 2 + cola 1)
+	Proporción de tiempo en taller
+	Proporción de tiempo en stand-by
+	
+	Output pie.csv línea 3
+	
+4) Gráfico de pie con 3 variables
+	Número promedio de vehículos activos
+	Número promedio dehvehículos en reparación
+	Número promedio de vehículos en stand-by
+	
+	Output	pie.csv	línea 4
+	
+5) Gráfico de pie con 3 variables
+	Número promedio de vehículos en cola 2 (cola de espera por repuestos)
+	Número promedio de vehículos en cola 1 (cola de entrada al taller)
+	Número promedio de vehículos dentro del taller	
+	
+	Output	pie.csv línea 5
+	
+6) Gráfico de evolución temporal tipo stacked con 3 variables (se muestran datos de una sola réplica)
+	Número de vehículos activos
+	Número de vehículos en reparación
+	Número de vehículos en stand-by
+	
+	Output	time_evolution_1.csv
+		Columna 1: tiempo
+		Columna 2: vehículos activos
+		Columna 3: vehículos en reparación
+		Columna 4: vehiculos en stand-by
+	
+7) Gráfico de evolución temporal con número de vehículos en cola 2 (se muestran datos de una sola réplica)
+	
+	Output	time_evolution_2.csv
+		Columna 1: tiempo
+		Columna 2: vehículos en cola 2
+
+8) Gráfico de evolución temporal con número de vehículos en cola 1 (se muestran datos de una sola réplica)
+	
+	Output	time_evolution_3.csv
+		Columna 1: tiempo
+		Columna 2: vehículos en cola 1
+
+9) Gráfico de evolución temporal con número de vehículos dentro del taller (se muestran datos de una sola réplica)
+	
+	Output	time_evolution_3.csv
+		Columna 1: tiempo
+		Columna 2: vehículos en taller
+
+10) Gráfico de barras que muestra la proporción del tiempo ocupado para cada plaza del taller
+	Eje Y: porcentaje de ocupación 
+	Eje X: plazas del taller (numeradas desde 1 hasta la capacidad del taller)
+	
+	Output	bars.csv
+		línea 1: datos eje X
+		línea 2: datos eje Y
+		
+		ejemplo: 
+			1,2,3,4
+			0.8,0.7,0.3,0.3
+	
+11) Gráfico de  barras que muestra el número de fallas promedio para cada tipo de componente
+	Eje Y: número de fallas promedio
+	Eje X: componentes
+	
+	Output	bars.csv
+		línea 3: datos eje X
+		línea 4: datos eje Y
+
+12) Gráfico de barras que muestra el nivel de inventario promedio para cada tipo de componente
+	Eje Y: nivel de inventario promedio
+	Eje X: componentes
+	
+	Output	bars.csv
+		línea 5: datos eje X
+		línea 6: datos eje Y
+	
+13) Grafico de barras que muestra la proporcion de veces que el inventario no pudo responder a una demanda para cada tipo de componente
+	Eje Y: proporción de demandas insatisfechas
+	Eje X: componentes
+	
+	Output	bars.csv
+		línea 7: datos eje X
+		línea 8: datos eje Y
+
+14) Grafico de evolucion temporal con el inventario para cada componente (se muestran datos de una sola réplica)
+	
+	Output	time_evolution_4.csv
+		Columna 1:	tiempo
+		Columna 2: 	inventario de la componente 1
+		Columna 3:	inventario de la componente 2
+		etc...
+
+
+
+

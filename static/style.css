@@ -1,5 +1,5 @@
 .wrap {
-  width: 85%;
+  width: 90%;
   margin: auto auto ;
 }
 
@@ -76,4 +76,18 @@ table tr th{
 
 table tr td,th{
   text-align:center;
+}
+
+#progressbar {
+  height: 35px;
+  background: url(/static/loadingimage.gif) no-repeat center;
+  cursor: wait;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#loading{
+  display: none;
 }

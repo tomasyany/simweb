@@ -1,83 +1,198 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="loading">
+<h1 style="text-align:center">...simulación en curso...</h1>
+<div id="progressbar"></div>
+</div>
 
-{% for message in get_flashed_messages() %}
-  <div class="flash">{{ message }}</div>
-{% endfor %}
-
+<div id="content">
 <h1  style="text-align:center">Setup</h1>
 <form action="/form" method="post">
 <div  class="jumbotron" id="todo" style="float:left;width:100%;">
   
   <div name="general" class="medWidth" style="float:left;">
 
-    <h3 style="text-align: center;">Setup General</h3>
+    <h3 style="text-align: center;">General</h3>
 
     <div class="form-group">
-      {{ form.sim_name(class_="form-control", placeholder="Nombre simulación", type="text")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.sim_name(class_="form-control", placeholder="Nombre simulación", type="text")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Nombre de la simulación" data-content="Elija un nombre para esta configuración. Ej. Escenario optimista">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
     <div class="form-group">
-      {{ form.replications(class_="form-control", placeholder="Cantidad de réplicas", type="number")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.replications(class_="form-control", placeholder="Cantidad de réplicas", type="number")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Cantidad de réplicas" data-content="Indique cuántas réplicas desea hacer. Debe ser un número mayor o igual a 1. Ej. 50">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
     <div class="form-group">
-      {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte (horas)", type="number")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.simulation_horizon(class_="form-control", placeholder="Horizonte", type="number")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Horizonte de simulación" data-content="Indique el horizonte de simulación en la unidad que desee. Lo importante es que dicha unidad debe ser coherente con el resto de los parámetros configurados. Ej. 100">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
     <div class="form-group">
-      {{ form.trucks_amount(class_="form-control", placeholder="Flota total", type="number")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.trucks_amount(class_="form-control", placeholder="Flota total", type="number")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Tamaño flota" data-content="Indique la cantidad de vehículos presentes en cada réplica. Ej. 20">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
     <div class="form-group">
-      {{ form.trucks_use(class_="form-control", placeholder="Flota en uso", type="number")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.trucks_use(class_="form-control", placeholder="Flota en uso", type="number")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Número de diseño" data-content="Indique la mínima cantidad de vehículos que deben estar funcionando en cada momento. Este es un número mayor a 1 y menor que la cantidad total de vehículos definida antes. Ej. 15">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>  
 
     <div  class="form-group">
-      {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad taller", type="number")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.workshop_capacity(class_="form-control", placeholder="Capacidad taller", type="number")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Capacidad del taller" data-content="Indique la capacidad de reparación del taller, en el máximos de unidades de vehículos que pueden ingresar en él. Ej. 5">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
     <div class="form-group">
-      {{ form.components(class_="form-control", placeholder="Cantidad componentes", type="number", onchange="addFields()")  }}
+      <div style="float: left; width: 89%;">
+        {{ form.components(class_="form-control", placeholder="Cantidad componentes", type="number", onchange="addFields()")  }}
+      </div>
+      <div style="float: left; width: 10%;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Cantidad de componentes" data-content="Indique la cantidad de componentes por vehículo. Ej. 3">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear: both"></div>
     </div>
 
   </div>
   
   <div class="bigWidth" style="float:right;">
+
     <div class="settings" style="width:15%; float:left; padding-right: 8px;">
-      <h3 style="text-align: center;">Componente</h3>
+      <div>
+        <div style="float: left; width: 89%;">
+          <h3 style="text-align: center; overflow:hidden">Componente</h3>
+        </div>
+        <div style="float: left; width: 10%; padding-top: 15px">
+            <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Nombre de los componentes" data-content="Indique el nombre de cada uno de los componentes. Ej. Motor">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div id="componente" class="form-group" style="width:100%; margin: 0 auto;">
       </div>
     </div>
-    <div class="settings" style="float:left;padding-right: 8px;">
-    <h3 style="text-align: center;">Fallas</h3>
+
+    <div class="settings" style="float:left; padding-right: 8px;">
+      <div>
+        <div style="float: left; width: 89%;">
+          <h3 style="text-align: center; overflow:hidden">Fallas</h3>
+        </div>
+        <div style="float: left; width: 10%; padding-top: 15px">
+            <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Distribución fallas" data-content="Indique la distribución y los parámetros correspondientes para los tiempos entre fallas de las componentes. Ej. Exponencial - 0.5">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div id="fallas" class="form-group" style=" width:100%;  margin: 0 auto;">
       </div>
     </div>
+
     <div class="settings" style="padding-right: 8px;">
-    <h3 style="text-align: center;">Reposición</h3>
+      <div>
+        <div style="float: left; width: 89%;">
+          <h3 style="text-align: center; overflow:hidden">Reposición</h3>
+        </div>
+        <div style="float: left; width: 10%; padding-top: 15px">
+            <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Distribución reposición" data-content="Indique la distribución y los parámetros correspondientes para los tiempos de reposición de las componentes en inventario. Ej. Uniforme - 0 - 10">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div id="reemplazo" class="form-group" style="float:left; width:100%; margin: 0 auto;">
       </div>
     </div>
+
     <div class="settings" style="width:15%; padding-right: 8px;">
-    <h3 style="text-align: center;">Inventario</h3>
+      <div>
+        <div style="float: left; width: 89%;">
+          <h3 style="text-align: center; overflow:hidden">Inventario</h3>
+        </div>
+        <div style="float: left; width: 10%; padding-top: 15px">
+            <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Inventario inicial" data-content="Indique los inventarios iniciales para cada componente. Ej. 15">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div id="inventario" class="form-group" style="float:left; margin: 0 auto; width:100%;">
       </div>
     </div>
+
     <div class="settings" >
-    <h3 style="text-align: center;">Reparación</h3>
+      <div>
+        <div style="float: left; width: 89%;">
+          <h3 style="text-align: center; overflow:hidden">Reparación</h3>
+        </div>
+        <div style="float: left; width: 10%; padding-top: 15px">
+            <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Distribución reparación" data-content="Indique la distribución y los parámetros correspondientes para los tiempos de reparación de las componentes en taller. Ej. Gamma - 0 - 10">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div id="taller" class="form-group" style="margin: 0 auto; width:100%;">
       </div>
     </div>
+
+
   </div>
     
 </div>
   <!-- <input type="submit" class="btn btn-danger" style="float:right;" value="SIMULAR"> -->
-  <button type="submit" class="btn btn-block btn-danger">
+  <button type="submit" class="btn btn-block btn-danger" style="margin-bottom: 100px;" onclick="loading();">
     <h4>SIMULAR</h4>
   </button>
 </form>
+
 
 <template id="componente-template">
   <div class="form-group">
@@ -171,4 +286,5 @@
 {% endfor %}
 
  -->
+ </div>
 {% endblock %}

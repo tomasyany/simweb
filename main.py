@@ -1,3 +1,6 @@
+import os.path
+import json
+
 from time import sleep
 
 from flask import Flask
@@ -79,21 +82,113 @@ def form():
 
 @app.route ('/results1')
 def results1():
-  return render_template('results1.html', title='Resultados 1')
+  filename = "outputs/pie.csv"
+  if os.path.isfile(filename):
+    data_file = open(filename, 'r')
+    pies = []
+    titles = []
+    headers = []
+    for line_number, line in enumerate(data_file):
+      line = line.split(',')
 
-@app.route ('/table1')
-def table1(): 
-  return render_template('table1.html', title='Resultados 1')
+      if line_number == 0:
+        titles.append('Distribución tiempos 1')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo Activo", 
+             "Tiempo en Reparación", 
+             "Tiempo en Stand-by"]
+
+      elif line_number == 1:
+        titles.append('Distribución tiempo cola y taller')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo en Espera Respuestos",
+             "Tiempo en Espera Entrada Taller",
+             "Tiempo en Taller"]
+
+      elif line_number == 2: 
+        titles.append('Distribución tiempos 2')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo Activo",
+             "Tiempo en Cola",
+             "Tiempo en Taller",
+             "Tiempo en Stand-by"]
+
+      elif line_number == 3: 
+        titles.append('Proporción vehículos')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Vehículos activos",
+             "Vehículos en Reparación",
+             "Vehículos en Stand-by"]
+
+      elif line_number == 4: 
+        titles.append('Proporción vehículos cola y taller')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Vehículos en Espera Respuestos",
+             "Vehículos en Espera Entrada Taller",
+             "Vehículos en Taller"]
+
+      pies.append([[name,float(value)] for name, value in zip(t, line)])
+    return render_template('results1.html', title='Resultados 1',
+                           pies=json.dumps(pies),
+                           titles=json.dumps(titles),
+                           headers=json.dumps(headers))
+  else:
+    return render_template('no_results.html', title='No hay resultados')
 
 @app.route ('/results2')
-def results2(): pass
+def results2():
+  filename = "outputs/bars.csv"
+  if os.path.isfile(filename):
+    data_file = open(filename, 'r')
+    pies = []
+    titles = []
+    headers = []
+    for line_number, line in enumerate(data_file):
+      line = line.split(',')
 
-@app.route ('/results3')
-def results3(): pass
+      if line_number == 0:
+        titles.append('Distribución tiempos 1')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo Activo", 
+             "Tiempo en Reparación", 
+             "Tiempo en Stand-by"]
 
-@app.route ('/download')
-def download(): pass
+      elif line_number == 1:
+        titles.append('Distribución tiempo cola y taller')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo en Espera Respuestos",
+             "Tiempo en Espera Entrada Taller",
+             "Tiempo en Taller"]
 
+      elif line_number == 2: 
+        titles.append('Distribución tiempos 2')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Tiempo Activo",
+             "Tiempo en Cola",
+             "Tiempo en Taller",
+             "Tiempo en Stand-by"]
+
+      elif line_number == 3: 
+        titles.append('Proporción vehículos')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Vehículos activos",
+             "Vehículos en Reparación",
+             "Vehículos en Stand-by"]
+
+      elif line_number == 4: 
+        titles.append('Proporción vehículos cola y taller')
+        headers.append([['string', 'Tiempo'], ['number', 'Utilización']])
+        t = ["Vehículos en Espera Respuestos",
+             "Vehículos en Espera Entrada Taller",
+             "Vehículos en Taller"]
+
+      pies.append([[name,float(value)] for name, value in zip(t, line)])
+    return render_template('results2.html', title='Resultados 2',
+                           pies=json.dumps(pies),
+                           titles=json.dumps(titles),
+                           headers=json.dumps(headers))
+  else:
+    return render_template('no_results.html', title='No hay resultados')
 
 
 if __name__ == "__main__":
