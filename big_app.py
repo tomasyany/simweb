@@ -79,6 +79,27 @@ class Simulation(object):
         self.n_q1_mean = []
         self.n_in_ws_mean = []
 
+        # to be used in graph 6
+        self.time = []
+        self.active_time = []
+        self.off_time = []
+        self.stand_by_time = []
+
+        # to be used in graph 7
+        self.q2_time = []
+
+        # to be used in graph 8
+        self.q1_time = []
+
+        # to be used in graph 9
+        self.ws_time = []
+
+        # to be used in graph 14
+        self.inventory_time = {}
+
+        # to be used in graph 10
+        self.ws_occupation = [[]]*self.workshop_capacity
+
     def run_simulation(self):
 
         # set the monitoring time step
@@ -136,6 +157,7 @@ class Simulation(object):
 
             # save simulation results
 
+            # graphs 1 and 2
             self.active_proportion.append(out_v[0])
             self.off_proportion.append(out_v[1])
             self.stand_by_proportion.append(out_v[2])
@@ -143,6 +165,8 @@ class Simulation(object):
             self.q2_proportion.append(out_v[4])
             self.in_ws_proportion.append(out_v[5])
             self.total_trucks_repaired.append(Workshop.Ndone)
+
+            # graph 3
 
             sum_t = out[0] + out[3] + out[4] + out[5] + out[2]
 
@@ -155,12 +179,38 @@ class Simulation(object):
             mean_1 = out[0]
             mean_2 = out[1]
 
+            # graphs 4 and 5
             self.n_active_mean.append(mean_1[0])
             self.n_off_mean.append(mean_1[1])
             self.n_stand_by_mean.append(mean_1[2])
             self.n_q1_mean.append(mean_2[0])
             self.n_q2_mean.append(mean_2[1])
             self.n_in_ws_mean.append(mean_2[2])
+
+            # save time evolution output variables
+            if rep == 0:
+                self.time = fleet.time
+
+                # graph 6
+                out = fleet.trucks_count
+                self.active_time = out[0]
+                self.off_time = out[1]
+                self.stand_by_time = out[2]
+
+                out = fleet.queue_count
+                # graph 7
+                self.q2_time = out[1]
+                # graph 8
+                self.q1_time = out[0]
+                # graph 9
+                self.ws_time = fleet.workshop_occupation[0]
+
+                # graph 14
+                self.inventory_time = inv.inventory_disp
+
+            # graph 10
+            for idx,ws in enumerate(Workshop.All):
+                self.ws_occupation[idx].append(ws.get_occupation())
 
             # print results
             print('I: Active time proportion = %f' % out_v[0])
@@ -262,6 +312,51 @@ class Simulation(object):
 
         file_pie.close()
 
+    def print_time_evolution_files(self):
+
+        l_6 = ""
+        l_7 = ""
+        l_8 = ""
+        l_9 = ""
+        l_14 = ""
+
+        for t in range(len(self.time)):
+            # write first column
+            l_6 += "{0:.1f}".format(self.time[t]) + ","
+            l_7 += "{0:.1f}".format(self.time[t]) + ","
+            l_8 += "{0:.1f}".format(self.time[t]) + ","
+            l_9 += "{0:.1f}".format(self.time[t]) + ","
+            l_14 += "{0:.1f}".format(self.time[t]) + ","
+
+            l_6 += str(self.active_time[t]) + "," + str(self.off_time[t]) + \
+                   "," + str(self.stand_by_time[t]) + "\n"
+            l_7 += str(self.q2_time[t]) + "\n"
+            l_8 += str(self.q1_time[t]) + "\n"
+            l_9 += str(self.ws_time[t]) + "\n"
+            for v in self.inventory_time.values():
+                l_14 += "{0:.1f}".format(v[t]) + ","
+            l_14 = l_14[:-1]+ "\n"
+
+        f_6 = open("outputs/time_evolution_1.csv", "w")
+        f_7 = open("outputs/time_evolution_2.csv", "w")
+        f_8 = open("outputs/time_evolution_3.csv", "w")
+        f_9 = open("outputs/time_evolution_4.csv", "w")
+        f_14 = open("outputs/time_evolution_5.csv", "w")
+
+        f_6.write(l_6)
+        f_7.write(l_7)
+        f_8.write(l_8)
+        f_9.write(l_9)
+        f_14.write(l_14)
+
+        f_6.close()
+        f_7.close()
+        f_8.close()
+        f_9.close()
+        f_14.close()
+
+    def print_bars_file(self):
+        pass
 
 
 def print_output_to_file(output, headers, file_name):
@@ -299,3 +394,4 @@ l1 = [["exponential",[10]], ["exponential", [10]]]
 s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[1, 1], 365)
 s.run_simulation()
 s.print_pie_file()
+s.print_time_evolution_files()

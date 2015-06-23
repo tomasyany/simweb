@@ -10,6 +10,7 @@ class Workshop(object):
     next_id = 1    # for indexing different workshops
     Idle = []    # idle workshops
     Busy = []    # busy workshops
+    All = []    # idle+ busy
     Queue_1 = []    # trucks with component waiting to be repaired
     Queue_2 = []    # trucks without component waiting to be repaired
     Ndone = 0    # total amount of repaired trucks
@@ -26,7 +27,13 @@ class Workshop(object):
         # Tell simpy to add this workshop's run() process
         self.action = env.process(self.run())
 
+        # state list 1 = busy, 0 = idle
+        self.state = []
+        # monitor process
+        self.monitor_process = env.process(self.monitor_workshop())
+
         Workshop.Idle.append(self)  # all workshops start as idle
+        Workshop.All.append(self)
 
         # The required event is triggered when this workshop is idle and
         # there is an incoming repair request
@@ -94,3 +101,14 @@ class Workshop(object):
             truck.fleet.active_trucks.append(truck)
         else:
             truck.fleet.stand_by_trucks.append(truck)
+
+    def monitor_workshop(self):
+        while True:
+            if self in Workshop.Idle():
+                self.state.append(0)
+            else:
+                self.state.append(1)
+            yield self.env.timeout(self.monitor_step)
+
+    def get_occupation(self):
+        return float(sum(self.state))/len(self.state)

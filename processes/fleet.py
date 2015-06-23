@@ -35,6 +35,9 @@ class Fleet(object):
         #  every monitoring time step
         self.queue_count = [[], []]
 
+        # time list
+        self.time = []
+
         # workshop occupation stores the amount of busy and idle workshops at
         #  every monitoring time step
         self.workshop_occupation = [[], []]
@@ -74,6 +77,8 @@ class Fleet(object):
 
             self.workshop_occupation[0].append(len(Workshop.Busy))
             self.workshop_occupation[1].append(len(Workshop.Idle))
+
+            self.time.append(self.env.now)
 
             yield self.env.timeout(self.monitor_step)
 
