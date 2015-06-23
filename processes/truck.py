@@ -10,7 +10,7 @@ class Truck(object):
     completed.
     Repaired trucks can go either active (working) or stand-by """
 
-    def __init__(self,env,t_id,components,fleet,inventory):
+    def __init__(self, env, t_id, components, fleet, inventory, mon_step):
         """" Constructor for the Truck process"""
         # components is a list containing all the components of this truck
         self.components = components
@@ -18,6 +18,7 @@ class Truck(object):
         self.id = t_id    # truck id
         self.fleet = fleet     # The fleet this truck belongs to
         self.inventory = inventory
+        self.monitor_step = mon_step  # monitoring time step
 
         # Tell simpy to add this truck's run() and check_component() processes
         self.action = env.process(self.run())
@@ -39,7 +40,7 @@ class Truck(object):
         # component needed to achieve the repair process
         self.got_component = env.event()
 
-        # The following are variables that may be used for calculating output
+        # The following variables might be used for calculating output
         #  variables
         # total working time
         self.working_time = 0
@@ -51,6 +52,8 @@ class Truck(object):
         self.t_queue2_time = 0
         # total amount of time spent in queue 1
         self.t_queue1_time = 0
+        # total amount of time spent in the workshop
+        self.t_workshop_time = 0
 
         # the last failure time
         self.failure_time = 0
@@ -60,6 +63,8 @@ class Truck(object):
         self.start_time = 0
         # last time truck left queue_2
         self.l_q2_time = 0
+        # last time truck left queue_1
+        self.l_q1_time = 0
 
         # the current state = 'active', 'off' or 'stand_by'
         self.state = 'stand_by'
@@ -122,6 +127,7 @@ class Truck(object):
             # update the total off time
             self.off_time += self.env.now - self.failure_time
             self.repair_time = self.env.now    # update last repair time
+            self.t_workshop_time += self.env.now - self.l_q1_time
 
     def failure(self):
         # The failure method. It checks whether there are trucks in stand-by
@@ -171,13 +177,22 @@ class Truck(object):
 
         if self.state == 'active':
             self.working_time += self.env.now - self.start_time
-            self.start_time = self.env.now
         elif self.state == 'off':
             self.off_time += self.env.now - self.failure_time
-            self.failure_time = self.env.now
+
+            if (self.l_q2_time > self.l_q1_time) & (self.l_q2_time >
+                    self.repair_time):
+                self.t_queue1_time += self.env.now - self.l_q2_time
+            elif (self.l_q1_time > self.l_q2_time) & (self.l_q1_time > \
+                    self.repair_time):
+                self.t_workshop_time += self.env.now - self.l_q1_time
+            else:
+                self.t_queue2_time += self.env.now - self.failure_time
+
         else:
             self.standby_time += self.env.now - self.repair_time
-            self.repair_time = self.env.now
 
-        return [self.working_time, self.off_time, self.standby_time]
+        output_1 = [self.working_time, self.off_time, self.standby_time]
+        output_2 = [self.t_queue2_time, self.t_queue1_time, self.t_workshop_time]
 
+        return [output_1, output_2]

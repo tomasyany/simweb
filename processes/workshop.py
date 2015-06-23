@@ -10,13 +10,15 @@ class Workshop(object):
     next_id = 1    # for indexing different workshops
     Idle = []    # idle workshops
     Busy = []    # busy workshops
+    All = []    # idle+ busy
     Queue_1 = []    # trucks with component waiting to be repaired
     Queue_2 = []    # trucks without component waiting to be repaired
     Ndone = 0    # total amount of repaired trucks
 
-    def __init__(self, env):
+    def __init__(self, env, mon_step):
         """ Constructor for the Workshop process"""
         self.env = env    # the simpy environment
+        self.monitor_step = mon_step # monitoring time step
 
         # Set a different id for each workshop
         self.id = Workshop.next_id
@@ -25,7 +27,17 @@ class Workshop(object):
         # Tell simpy to add this workshop's run() process
         self.action = env.process(self.run())
 
+        # state list 1 = busy, 0 = idle
+        self.state = []
+
+        # working state: 1 = busy, 0 = idle
+        self.working = 0
+
+        # monitor process
+        self.monitor_process = env.process(self.monitor_workshop())
+
         Workshop.Idle.append(self)  # all workshops start as idle
+        Workshop.All.append(self)
 
         # The required event is triggered when this workshop is idle and
         # there is an incoming repair request
@@ -46,14 +58,20 @@ class Workshop(object):
             # Remove this workshop from the idle list
             Workshop.Idle.remove(self)
             Workshop.Busy.append(self)
+            self.working = 1
 
             # Step 2: Repair process
             while Workshop.Queue_1 != [] or Workshop.Queue_2 != []:
                 # get the first truck in the queue
                 if Workshop.Queue_1 != []:
                     truck = Workshop.Queue_1.pop(0)
+                    truck.l_q1_time = self.env.now
+                    truck.t_queue1_time += self.env.now - truck.l_q2_time
                 else:
                     truck = Workshop.Queue_2.pop(0)
+                    truck.l_q1_time = self.env.now
+                    truck.l_q2_time = self.env.now
+                    truck.t_queue2_time += self.env.now - truck.failure_time
 
                 yield self.env.process(self.repair_truck(truck))
 
@@ -61,6 +79,7 @@ class Workshop(object):
             # idle again
             Workshop.Busy.remove(self)
             Workshop.Idle.append(self)
+            self.working = 0
 
     def repair_truck(self, truck):
         # wait until the replacement component has arrived
@@ -88,3 +107,11 @@ class Workshop(object):
             truck.fleet.active_trucks.append(truck)
         else:
             truck.fleet.stand_by_trucks.append(truck)
+
+    def monitor_workshop(self):
+        while True:
+            self.state.append(self.working)
+            yield self.env.timeout(self.monitor_step)
+
+    def get_occupation(self):
+        return float(sum(self.state))/len(self.state)
