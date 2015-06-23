@@ -427,7 +427,7 @@ class Simulation(object):
                 line += "\n"
             i += 1
 
-        f_b.write(line_names + line)
+        f_b.write(line)
 
         line = ""
         i = 0
@@ -439,7 +439,7 @@ class Simulation(object):
                 line += "\n"
             i += 1
 
-        f_b.write(line_names + line)
+        f_b.write(line)
 
         f_b.close()
 
