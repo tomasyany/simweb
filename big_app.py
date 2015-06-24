@@ -1,7 +1,10 @@
 # coding=utf-8
 
 import simpy
+import numpy as np
+import scipy as sp
 from numpy import random
+import scipy.stats
 
 from processes.inventory import Inventory
 from processes.fleet import Fleet
@@ -443,6 +446,57 @@ class Simulation(object):
 
         f_b.close()
 
+    def print_summary_file(self):
+        line = "Nombre de la variable,Estimación,Intervalo de confianza (" \
+               "95%): inf.,Intervalo de confianza (95%): sup.,Precisión\n"
+        text1 = "Proporción del tiempo "
+        text2 = "Número promedio de "
+        var_names = [text1 + "en funcionamiento",
+                     text1 + "en reparación",
+                     text1 + "en stand-by",
+                     text1 + "en cola de espera por repuestos",
+                     text1 + "en cola por entrar al taller",
+                     text1 + "dentro del taller",
+                     text2 + "vehículos en funcionamiento",
+                     text2 + "vehículos en reparación",
+                     text2 + "vehículos en stand-by",
+                     text2 + "vehículos en cola de espera por repuestos",
+                     text2 + "vehículos en cola por entrar al taller",
+                     text2 + "vehículos dentro del taller"]
+
+        var_lists = [self.active_proportion,
+                     self.off_proportion,
+                     self.stand_by_proportion,
+                     self.q2_proportion,
+                     self.q1_proportion,
+                     self.in_ws_proportion,
+                     self.n_active_mean,
+                     self.n_off_mean,
+                     self.n_stand_by_mean,
+                     self.n_q2_mean,
+                     self.n_q1_mean,
+                     self.n_in_ws_mean]
+
+        text2 += "fallas para el componente "
+        for name, liszt in self.comp_failures.items():
+            var_names.append(text2 + name)
+            var_lists.append(liszt)
+
+        for i in range(len(var_names)):
+            line += var_names[i] + ","
+            data = mean_confidence_interval(var_lists[i])
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+
+        f_out = open("outputs/summary.csv", "w")
+        f_out.write(line)
+        f_out.close()
+
+
 
 def print_output_to_file(output, headers, file_name):
     f = open(file_name, 'w')
@@ -468,6 +522,13 @@ def print_output_to_file(output, headers, file_name):
     f.write(line)
     f.close()
 
+def mean_confidence_interval(data, confidence=0.95):
+    a = 1.0*np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * sp.stats.t.ppf((1+confidence)/2., n-1)
+    return [m, m-h, m+h, h/m]
+
 def get_mean(array):
     if len(array) == 0:
         return 0
@@ -481,3 +542,5 @@ s.run_simulation()
 s.print_pie_file()
 s.print_time_evolution_files()
 s.print_bars_file()
+s.print_summary_file()
+
