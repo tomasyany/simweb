@@ -18,31 +18,40 @@
     var options = []
 
     headers = {{ headers|safe }}
-    pies = {{ pies|safe }}
+    values = {{ values|safe }}
     titles = {{ titles|safe }}
 
-    for (i = 0; i < pies.length; i++) { 
+    for (i = 0; i < values.length; i++) { 
       // Create the data table
-      console.log(i);
       data.push(new google.visualization.DataTable());
       data[data.length - 1].addColumn(headers[i][0][0], headers[i][0][1]);
       data[data.length - 1].addColumn(headers[i][1][0], headers[i][1][1]);
-      data[data.length - 1].addRows(pies[i]);
+      data[data.length - 1].addRows(values[i]);
 
       // Instantiate and draw our chart, passing in some options.
-      options.push({'title': titles[i],
-                   'width':900,
-                   'height':800})
-
-      chart = new google.visualization.PieChart(document.getElementById('chart'+i));
-      chart.draw(data[i], options[i]);
+      if (i == 0 || i == 3){
+        var formatter = new google.visualization.NumberFormat({
+          fractionDigits: 2,
+          pattern: '#%' 
+        });
+        formatter.format(data[i], 1);
+        options.push({title: titles[i],
+                      width:900,
+                      height:600,
+                      vAxis:{format: 'percent'}});
+      }else{
+        options.push({title: titles[i],
+                      width:900,
+                      height:600});
+      } 
+      chart = new google.visualization.ColumnChart(document.getElementById('bar'+i));
+      chart.draw(data[i], options[i] );
     }
   }
 </script>
 <!--Div that will hold the pie chart-->
-<div id="chart0"></div>
-<div id="chart1"></div>
-<div id="chart2"></div>
-<div id="chart3"></div>
-<div id="chart4"></div>
+<div id="bar0"></div>
+<div id="bar1"></div>
+<div id="bar2"></div>
+<div id="bar3"></div>
 {% endblock %}

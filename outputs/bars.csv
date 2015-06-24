@@ -1,8 +1,8 @@
-1,2,3
-0.5,0.6,0.1
-motor,neumatico
-1400,300
-motor,neumatico
-3.1,1.2
-motor,neumatico
-0.14,0.5
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99,0.99
+Embrague,Neumático,Motor,Luces
+31.56,47.20,97.10,23.84
+Embrague,Neumático,Motor,Luces
+22.9,7.4,0.0,48.1
+Embrague,Neumático,Motor,Luces
+0.00,0.05,0.97,0.00

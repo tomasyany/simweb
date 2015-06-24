@@ -17,31 +17,38 @@
     var data = []
     var options = []
 
-    headers = {{ headers|safe }}
     values = {{ values|safe }}
     titles = {{ titles|safe }}
 
     for (i = 0; i < values.length; i++) { 
       // Create the data table
-      data.push(new google.visualization.DataTable());
-      data[data.length - 1].addColumn(headers[i][0][0], headers[i][0][1]);
-      data[data.length - 1].addColumn(headers[i][1][0], headers[i][1][1]);
-      data[data.length - 1].addRows(values[i]);
+      data.push(new google.visualization.arrayToDataTable(values[i]));
 
+      // data.push(new google.visualization.arrayToDataTable(d));
       // Instantiate and draw our chart, passing in some options.
-      options.push({title: titles[i],
-                   width:900,
-                   height:800})
 
-      chart = new google.visualization.PieChart(document.getElementById('chart'+i));
+      if (i == 0){
+        options.push({title: titles[i],
+                      isStacked: 'true',
+                      width:700,
+                      height:500})
+
+        chart = new google.visualization.AreaChart(document.getElementById('lines'+i));
+      }else{
+        options.push({title: titles[i],
+                      width:1500,
+                      height:500})
+
+        chart = new google.visualization.LineChart(document.getElementById('lines'+i));
+      }
       chart.draw(data[i], options[i]);
     }
   }
 </script>
 <!--Div that will hold the pie chart-->
-<div id="chart0"></div>
-<div id="chart1"></div>
-<div id="chart2"></div>
-<div id="chart3"></div>
-<div id="chart4"></div>
+<div id="lines0"></div>
+<div id="lines1"></div>
+<div id="lines2"></div>
+<div id="lines3"></div>
+<div id="lines4"></div>
 {% endblock %}
