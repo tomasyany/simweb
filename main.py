@@ -1,5 +1,7 @@
 import os.path
 import json
+import sys
+sys.stdout = open(os.devnull, "w") # Stops Python from printing stuff on console
 
 from time import sleep
 
@@ -14,6 +16,7 @@ from controllers.form import SimForm
 from big_app import Simulation
 
 app = Flask (__name__)
+
 
 @app.route ('/')
 def home():

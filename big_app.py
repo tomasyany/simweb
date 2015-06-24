@@ -18,7 +18,7 @@ class Simulation(object):
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon, mon_step):
+                 simulation_horizon, mon_step=24*7):
         """
         :param replications: the number of replications
         :param total_trucks: the total amount of trucks
@@ -124,13 +124,6 @@ class Simulation(object):
 
         # set the monitoring time step
         m_step = self.mon_step
-
-        # create the output file
-        f = open('outputs/data.csv', 'w')
-        f.write('Tiempo activo,Tiempo en taller,Tiempo en stand-by,'
-                'Tiempo en cola 1,Tiempo en cola 2,Tiempo en taller,Vehiculos '
-                'reparados\n')
-        f.close()
 
         for rep in range(self.replications):
             random.seed(rep)
