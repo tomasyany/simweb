@@ -18,7 +18,7 @@ class Simulation(object):
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon):
+                 simulation_horizon, mon_step):
         """
         :param replications: the number of replications
         :param total_trucks: the total amount of trucks
@@ -38,8 +38,10 @@ class Simulation(object):
         :param start_inventory: a list containing the initial inventory for
         each component, e.g. [1, 1]
         :param simulation_horizon:
+        :param mon_step:
         """
         self.replications = replications
+        self.mon_step = mon_step
         self.total_trucks = total_trucks
         self.design_number = design_number
         self.workshop_capacity = workshop_capacity
@@ -121,7 +123,7 @@ class Simulation(object):
     def run_simulation(self):
 
         # set the monitoring time step
-        m_step = 1
+        m_step = self.mon_step
 
         # create the output file
         f = open('outputs/data.csv', 'w')
@@ -499,6 +501,33 @@ class Simulation(object):
         f_out.write(line)
         f_out.close()
 
+    def print_summary_2(self):
+        line = line = "Nombre de la variable,Estimación,Intervalo de confianza (" \
+               "95%): inf.,Intervalo de confianza (95%): sup.,Precisión\n"
+        for name, liszt in self.inv_prom.items():
+            line += "Inventario promedio del componente " + name + ","
+            data = mean_confidence_interval(liszt)
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+
+        for name, liszt in self.inv_breaks.items():
+            line += "Proporción de veces que " + name + " no estuvo en " \
+                                                        "inventario,"
+            data = mean_confidence_interval(liszt)
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+        f2_out = open("outputs/summary_2.csv","w")
+        f2_out.write(line)
+        f2_out.close()
+
 
 
 def print_output_to_file(output, headers, file_name):
@@ -539,11 +568,32 @@ def get_mean(array):
         return float(sum(array))/len(array)
 
 
-l1 = [["exponential",[10]], ["exponential", [10]]]
-s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[2, 1], 365)
+# Configuracion
+replicas = 100
+mon_step = 24*7
+total_camiones = 30
+design = 24
+ws_cap = 3
+n_comp = 5
+nombre_comp = ["comp1", "comp2", "comp3", "comp4", "comp5"]
+distribucion_falla = [["exponential",[24*30*5]], ["exponential", [24*30]], ["exponential",[24*30*12]],
+                      ["exponential",[24*30*4]],["exponential",[24*30*3]]]
+distribucion_reparacion = [["uniform",[12, 72]], ["uniform", [24, 36]], ["uniform", [24, 36]],
+                           ["uniform", [24, 72]],["uniform", [12, 24]]]
+distribucion_reposicion = [["gamma",[3, 24]], ["gamma", [2, 24]], ["gamma", [2, 144]],
+                           ["gamma", [3, 24]], ["gamma", [3, 24]]]
+
+inv_inicial = [2, 3, 1, 2, 1]
+horizonte = 24*365*5
+
+s = Simulation(replicas,total_camiones,design,ws_cap,n_comp,nombre_comp,
+                   distribucion_falla,distribucion_reparacion,
+				   distribucion_reposicion,inv_inicial, horizonte,mon_step)
+
 s.run_simulation()
 s.print_pie_file()
 s.print_time_evolution_files()
 s.print_bars_file()
 s.print_summary_file()
+s.print_summary_2()
 
