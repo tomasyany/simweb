@@ -350,7 +350,10 @@ class Simulation(object):
         l_7 = ""
         l_8 = ""
         l_9 = ""
-        l_14 = ""
+        l_14 = "Tiempo,"
+        for name in self.inventory_time.keys():
+            l_14 += name + ","
+        l_14 = l_14[:-1] + "\n"
 
         for t in range(len(self.time)):
             # write first column
