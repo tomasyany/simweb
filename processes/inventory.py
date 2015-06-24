@@ -51,7 +51,7 @@ class Inventory(object):
             self.queue[c_type].append(truck)
             self.inv_breaks[c_type][1] += 1
         # put an replacement order
-        self.env.process(self.put_order(c_type, truck.comp_inventory_time))
+        # self.env.process(self.put_order(c_type, truck.comp_inventory_time))
 
     def put_order(self, c_type, time_out):
         yield self.env.timeout(time_out)

@@ -104,6 +104,10 @@ class Truck(object):
             self.state = 'off'    # set current state to 'off'
             self.failure_time = self.env.now # update the last failure time
 
+            # put reposition order
+            self.env.process(self.inventory.put_order(self.comp_type,
+                                              self.comp_inventory_time))
+
             # Update the total working time
             self.working_time +=self.env.now-self.start_time
 

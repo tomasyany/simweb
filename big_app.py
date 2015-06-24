@@ -1,7 +1,10 @@
 # coding=utf-8
 
 import simpy
+import numpy as np
+import scipy as sp
 from numpy import random
+import scipy.stats
 
 from processes.inventory import Inventory
 from processes.fleet import Fleet
@@ -15,7 +18,7 @@ class Simulation(object):
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon):
+                 simulation_horizon, mon_step):
         """
         :param replications: the number of replications
         :param total_trucks: the total amount of trucks
@@ -35,8 +38,10 @@ class Simulation(object):
         :param start_inventory: a list containing the initial inventory for
         each component, e.g. [1, 1]
         :param simulation_horizon:
+        :param mon_step:
         """
         self.replications = replications
+        self.mon_step = mon_step
         self.total_trucks = total_trucks
         self.design_number = design_number
         self.workshop_capacity = workshop_capacity
@@ -118,7 +123,7 @@ class Simulation(object):
     def run_simulation(self):
 
         # set the monitoring time step
-        m_step = 1
+        m_step = self.mon_step
 
         # create the output file
         f = open('outputs/data.csv', 'w')
@@ -347,7 +352,10 @@ class Simulation(object):
         l_7 = ""
         l_8 = ""
         l_9 = ""
-        l_14 = ""
+        l_14 = "Tiempo,"
+        for name in self.inventory_time.keys():
+            l_14 += name + ","
+        l_14 = l_14[:-1] + "\n"
 
         for t in range(len(self.time)):
             # write first column
@@ -427,7 +435,7 @@ class Simulation(object):
                 line += "\n"
             i += 1
 
-        f_b.write(line_names + line)
+        f_b.write(line)
 
         line = ""
         i = 0
@@ -439,9 +447,87 @@ class Simulation(object):
                 line += "\n"
             i += 1
 
-        f_b.write(line_names + line)
+        f_b.write(line)
 
         f_b.close()
+
+    def print_summary_file(self):
+        line = "Nombre de la variable,Estimación,Intervalo de confianza (" \
+               "95%): inf.,Intervalo de confianza (95%): sup.,Precisión\n"
+        text1 = "Proporción del tiempo "
+        text2 = "Número promedio de "
+        var_names = [text1 + "en funcionamiento",
+                     text1 + "en reparación",
+                     text1 + "en stand-by",
+                     text1 + "en cola de espera por repuestos",
+                     text1 + "en cola por entrar al taller",
+                     text1 + "dentro del taller",
+                     text2 + "vehículos en funcionamiento",
+                     text2 + "vehículos en reparación",
+                     text2 + "vehículos en stand-by",
+                     text2 + "vehículos en cola de espera por repuestos",
+                     text2 + "vehículos en cola por entrar al taller",
+                     text2 + "vehículos dentro del taller"]
+
+        var_lists = [self.active_proportion,
+                     self.off_proportion,
+                     self.stand_by_proportion,
+                     self.q2_proportion,
+                     self.q1_proportion,
+                     self.in_ws_proportion,
+                     self.n_active_mean,
+                     self.n_off_mean,
+                     self.n_stand_by_mean,
+                     self.n_q2_mean,
+                     self.n_q1_mean,
+                     self.n_in_ws_mean]
+
+        text2 += "fallas para el componente "
+        for name, liszt in self.comp_failures.items():
+            var_names.append(text2 + name)
+            var_lists.append(liszt)
+
+        for i in range(len(var_names)):
+            line += var_names[i] + ","
+            data = mean_confidence_interval(var_lists[i])
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+
+        f_out = open("outputs/summary.csv", "w")
+        f_out.write(line)
+        f_out.close()
+
+    def print_summary_2(self):
+        line = line = "Nombre de la variable,Estimación,Intervalo de confianza (" \
+               "95%): inf.,Intervalo de confianza (95%): sup.,Precisión\n"
+        for name, liszt in self.inv_prom.items():
+            line += "Inventario promedio del componente " + name + ","
+            data = mean_confidence_interval(liszt)
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+
+        for name, liszt in self.inv_breaks.items():
+            line += "Proporción de veces que " + name + " no estuvo en " \
+                                                        "inventario,"
+            data = mean_confidence_interval(liszt)
+            for j in range(4):
+                line += "{0:.3f}".format(data[j])
+                if j < 3:
+                    line += ","
+                else:
+                    line += "\n"
+        f2_out = open("outputs/summary_2.csv","w")
+        f2_out.write(line)
+        f2_out.close()
+
 
 
 def print_output_to_file(output, headers, file_name):
@@ -468,6 +554,13 @@ def print_output_to_file(output, headers, file_name):
     f.write(line)
     f.close()
 
+def mean_confidence_interval(data, confidence=0.95):
+    a = 1.0*np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * sp.stats.t.ppf((1+confidence)/2., n-1)
+    return [m, m-h, m+h, h/m]
+
 def get_mean(array):
     if len(array) == 0:
         return 0
@@ -475,10 +568,32 @@ def get_mean(array):
         return float(sum(array))/len(array)
 
 
-# l1 = [["exponential",[10]], ["exponential", [10]]]
-# s = Simulation(30,3,2,2,2,["c1", "c2"],l1,l1,l1,[2, 1], 365)
+# # Configuracion
+# replicas = 100
+# mon_step = 24*7
+# total_camiones = 30
+# design = 24
+# ws_cap = 3
+# n_comp = 5
+# nombre_comp = ["comp1", "comp2", "comp3", "comp4", "comp5"]
+# distribucion_falla = [["exponential",[24*30*5]], ["exponential", [24*30]], ["exponential",[24*30*12]],
+#                       ["exponential",[24*30*4]],["exponential",[24*30*3]]]
+# distribucion_reparacion = [["uniform",[12, 72]], ["uniform", [24, 36]], ["uniform", [24, 36]],
+#                            ["uniform", [24, 72]],["uniform", [12, 24]]]
+# distribucion_reposicion = [["gamma",[3, 24]], ["gamma", [2, 24]], ["gamma", [2, 144]],
+#                            ["gamma", [3, 24]], ["gamma", [3, 24]]]
+
+# inv_inicial = [2, 3, 1, 2, 1]
+# horizonte = 24*365*5
+
+# s = Simulation(replicas,total_camiones,design,ws_cap,n_comp,nombre_comp,
+#                    distribucion_falla,distribucion_reparacion,
+# 				   distribucion_reposicion,inv_inicial, horizonte,mon_step)
+
 # s.run_simulation()
 # s.print_pie_file()
 # s.print_time_evolution_files()
 # s.print_bars_file()
+# s.print_summary_file()
+# s.print_summary_2()
 

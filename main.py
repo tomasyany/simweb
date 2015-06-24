@@ -79,7 +79,9 @@ def form():
       my_sim.print_pie_file()
       my_sim.print_time_evolution_files()
       my_sim.print_bars_file()
-      
+      my_sim.print_summary_file()
+      my_sim.print_summary_2()
+
       return redirect('/results1')
   return render_template('form.html', title='Setup', form=form)
 
