@@ -1,30 +1,76 @@
 import os.path
 import json
 import sys
-sys.stdout = open(os.devnull, "w") # Stops Python from printing stuff on console
+# sys.stdout = open(os.devnull, "w") # Stops Python from printing stuff on console
+import unicodedata
+from string import ascii_letters
 
 from time import sleep
+import datetime
+import shutil
 
 from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
 from flask import flash
+from flask import session
+from flask import url_for
 
 from controllers.form import SimForm
+from controllers.user import LoginForm
 
 from big_app import Simulation
 
 app = Flask (__name__)
+app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KTasd'
 
+def remove_accents(data):
+    return ''.join(x for x in unicodedata.normalize('NFKD', data) 
+                   if x in ascii_letters).lower()
 
 @app.route ('/')
 def home():
-  return render_template('welcome.html')
+  return render_template('welcome.html', title="Welcome")
+
+@app.route ('/login', methods=['GET', 'POST'])
+def login():
+  form = LoginForm(request.form)
+  if session.get('logged_in'):
+    return redirect('/form')
+
+  if request.method == 'POST' and form.validate():
+
+    time = datetime.datetime.now().strftime('_%Y_%m_%d-%H_%M_%S')
+    username = remove_accents(request.form['username']) + time
+    directory = 'outputs/' + username
+    session['username']  = username
+    session['logged_in'] = True
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    return redirect('/form')
+  return render_template('login.html', title='Login', form=form)
+
+@app.route('/clear')
+def clearsession():
+    username = session['username']
+    directory = 'outputs/' + username
+    if os.path.exists(directory):
+      shutil.rmtree(directory)
+    session.pop('logged_in', None)
+
+    # Clear the session
+    session.clear()
+    # Redirect the user to the main page
+    return redirect(url_for('home'))
 
 @app.route ('/form', methods=['GET', 'POST'])
 def form(): 
+  if not session.get('logged_in'):
+    return render_template('no_results.html', title='No hay resultados')
   form = SimForm(request.form)
+  username = session['username']
   if request.method == 'POST' and form.validate():
       data = request.form
 
@@ -77,7 +123,7 @@ def form():
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon)
+                 simulation_horizon, username)
       my_sim.run_simulation()
       my_sim.print_pie_file()
       my_sim.print_time_evolution_files()
@@ -90,7 +136,11 @@ def form():
 
 @app.route ('/results1')
 def results1():
-  filename = "outputs/pie.csv"
+  if not session.get('logged_in'):
+    return render_template('no_results.html', title='No hay resultados')
+
+  username = session['username']
+  filename = "outputs/"+session['username']+"/pie.csv"
   if os.path.isfile(filename):
     data_file = open(filename, 'r')
     values = []
@@ -145,7 +195,11 @@ def results1():
 
 @app.route ('/results2')
 def results2():
-  filename = "outputs/bars.csv"
+  if not session.get('logged_in'):
+    return render_template('no_results.html', title='No hay resultados')
+
+  username = session['username']
+  filename = "outputs/"+session['username']+"/bars.csv"
   if os.path.isfile(filename):
     data_file = open(filename, 'r')
     values = []
@@ -194,13 +248,17 @@ def results2():
 
 @app.route ('/results3')
 def results3():
+  if not session.get('logged_in'):
+    return render_template('no_results.html', title='No hay resultados')
+
+  username = session['username']
   filenames = []
 
-  filenames.append("outputs/time_evolution_1.csv")
-  filenames.append("outputs/time_evolution_2.csv")
-  filenames.append("outputs/time_evolution_3.csv")
-  filenames.append("outputs/time_evolution_4.csv")
-  filenames.append("outputs/time_evolution_5.csv")
+  filenames.append("outputs/"+session['username']+"/time_evolution_1.csv")
+  filenames.append("outputs/"+session['username']+"/time_evolution_2.csv")
+  filenames.append("outputs/"+session['username']+"/time_evolution_3.csv")
+  filenames.append("outputs/"+session['username']+"/time_evolution_4.csv")
+  filenames.append("outputs/"+session['username']+"/time_evolution_5.csv")
 
   if False not in [os.path.isfile(f) for f in filenames]:
     data_files = [open(f, 'r') for f in filenames]
@@ -248,7 +306,11 @@ def results3():
 
 @app.route ('/results4')
 def results4():
-  filename = "outputs/summary.csv"
+  if not session.get('logged_in'):
+    return render_template('no_results.html', title='No hay resultados')
+
+  username = session['username']
+  filename = "outputs/"+session['username']+"/summary.csv"
   if os.path.isfile(filename):
     data_file = open(filename, 'r')
     values = []

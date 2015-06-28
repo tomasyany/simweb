@@ -18,7 +18,7 @@ class Simulation(object):
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon, mon_step=24*7):
+                 simulation_horizon, username, mon_step=24*7):
         """
         :param replications: the number of replications
         :param total_trucks: the total amount of trucks
@@ -52,6 +52,7 @@ class Simulation(object):
         self.replacement_dist_parameters = replacement_dist_parameters
         self.start_inventory = start_inventory
         self.simulation_horizon = simulation_horizon
+        self.username = username
 
         # Output variables
 
@@ -158,7 +159,7 @@ class Simulation(object):
             env.run(until=self.simulation_horizon)
             print('Simulation finished at %d' % env.now)
 
-            # Get outputs
+            # Get outputs/
             out = fleet.get_mean_times()
             mean_times = out[0]
             mean_off_times = out[1]
@@ -264,7 +265,7 @@ class Simulation(object):
             env = None
 
     def print_pie_file(self):
-        file_pie = open('outputs/pie.csv', 'w')
+        file_pie = open('outputs/'+self.username+'/pie.csv', 'w')
 
         # write first line
         p = []
@@ -367,11 +368,11 @@ class Simulation(object):
                 l_14 += "{0:.1f}".format(v[t]) + ","
             l_14 = l_14[:-1]+ "\n"
 
-        f_6 = open("outputs/time_evolution_1.csv", "w")
-        f_7 = open("outputs/time_evolution_2.csv", "w")
-        f_8 = open("outputs/time_evolution_3.csv", "w")
-        f_9 = open("outputs/time_evolution_4.csv", "w")
-        f_14 = open("outputs/time_evolution_5.csv", "w")
+        f_6 = open("outputs/"+self.username+"/time_evolution_1.csv", "w")
+        f_7 = open("outputs/"+self.username+"/time_evolution_2.csv", "w")
+        f_8 = open("outputs/"+self.username+"/time_evolution_3.csv", "w")
+        f_9 = open("outputs/"+self.username+"/time_evolution_4.csv", "w")
+        f_14 = open("outputs/"+self.username+"/time_evolution_5.csv", "w")
 
         f_6.write(l_6)
         f_7.write(l_7)
@@ -386,7 +387,7 @@ class Simulation(object):
         f_14.close()
 
     def print_bars_file(self):
-        f_b = open("outputs/bars.csv", "w")
+        f_b = open("outputs/"+self.username+"/bars.csv", "w")
 
         line1 = ""
         line2 = ""
@@ -490,7 +491,7 @@ class Simulation(object):
                 else:
                     line += "\n"
 
-        f_out = open("outputs/summary.csv", "w")
+        f_out = open("outputs/"+self.username+"/summary.csv", "w")
         f_out.write(line)
         f_out.close()
 
@@ -517,7 +518,7 @@ class Simulation(object):
                     line += ","
                 else:
                     line += "\n"
-        f2_out = open("outputs/summary_2.csv","w")
+        f2_out = open("outputs/"+self.username+"/summary_2.csv","w")
         f2_out.write(line)
         f2_out.close()
 

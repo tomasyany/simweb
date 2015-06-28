@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="width:40%; text-align:center; padding-top: 60px;" class="wrap">
+<h1 style="text-align:center">Elige un nombre de usuario</h1>
+<div class="well center-block" style="max-width:500px; max-height:150px;">
+<form action="/login" method="post">
+    <div style="margin-left: auto; margin-right: auto; margin-bottom:30px;
+     width: 210px;">
+      <div style="float: left; width: 200px;">
+        {{ form.username(class_="form-control", placeholder="Usuario", type="text")  }}
+      </div>
+      <div style="float: left;width: 10px;">
+        <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Usuario" data-content="Elija un usuario para guardar su sesión. No olvide cerrarla al finalizar para que sus datos sean eliminados.">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div style="clear:both"></div>
+    </div>
+  <button type="submit" class="btn btn-block btn-danger" style="margin-bottom: 100px;">
+    <h4>INGRESAR</h4>
+  </button>
+
+
+</form>
+</div>
+</div>  
+{% endblock %}
