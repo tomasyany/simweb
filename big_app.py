@@ -2,9 +2,7 @@
 
 import simpy
 import numpy as np
-import scipy as sp
 from numpy import random
-import scipy.stats
 
 from processes.inventory import Inventory
 from processes.fleet import Fleet
@@ -549,11 +547,24 @@ def print_output_to_file(output, headers, file_name):
     f.close()
 
 def mean_confidence_interval(data, confidence=0.95):
+    q_95 = 1.959963984540054
     a = 1.0*np.array(data)
     n = len(a)
-    m, se = np.mean(a), scipy.stats.sem(a)
-    h = se * sp.stats.t.ppf((1+confidence)/2., n-1)
+    m, se = np.mean(a), sd(a)
+    h = q_95 * se /np.sqrt(n)
     return [m, m-h, m+h, h/m]
+
+def sd(a):
+    n = len(a)
+    m = np.mean(a)
+    cent = a-m
+    sq = cent*cent
+    sq_sum = sum(sq)
+    r = 1.0/(n-1)*sq_sum
+    std = np.sqrt(r)
+
+    return std
+
 
 def get_mean(array):
     if len(array) == 0:
