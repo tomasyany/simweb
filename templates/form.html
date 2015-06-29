@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+window.onload = addFields;
+</script>
+
 <div id="loading">
 <h1 style="text-align:center">...simulación en curso...</h1>
 <div id="progressbar"></div>
@@ -8,7 +12,7 @@
 
 <div id="content">
 <h1  style="text-align:center">Setup</h1>
-<form action="/form" method="post">
+<form action="/form" method="post" novalidate>
 <div  class="jumbotron" id="todo" style="float:left;width:100%;">
   
   <div name="general" class="medWidth" style="float:left;">
@@ -203,10 +207,17 @@
 <template id="fallas-template">
   <div class="form-group" style="overflow: hidden;">
     <div style="width: 120px; float: left;">
-      {{ form.failure_distr(class="form-control", type="text", id="failure_distr") }}
+      {{ form.failure_distr(class="form-control", type="text", id="failure_distr",
+         onchange="javascript:updateParam(this)") }}
     </div>
     <div style="margin-left: 125px;">
-      {{ form.failure_param(class="form-control", placeholder="Parámetros",type="number", id="failure_param") }}
+      <div style="margin-left: 5px; width:40%; float:left;">
+        {{ form.failure_param_1(class="form-control", placeholder="1",type="number", id="failure_param_1") }}
+      </div>
+      <div style="margin-left: 5px; width:40%; float:left; ">
+        {{ form.failure_param_2(class="form-control", placeholder="2",type="number", id="failure_param_2", disabled="disabled") }}
+      </div>
+      <div style="clear:both"></div>
     </div>
   </div>
 </template>
@@ -214,10 +225,17 @@
 <template id="reemplazo-template">
   <div class="form-group" style="overflow: hidden;">
     <div style="width: 120px; float: left;">
-      {{ form.repl_distr(class="form-control", type="text", id="repl_distr") }}
+      {{ form.repl_distr(class="form-control", type="text", id="repl_distr",
+         onchange="javascript:updateParam(this)") }}
     </div>
-    <div style="margin-left: 125px;">
-      {{ form.repl_param(class="form-control", placeholder="Parámetros", type="number", id="repl_param") }}
+<div style="margin-left: 125px;">
+      <div style="margin-left: 5px; width:40%; float:left;">
+        {{ form.repl_param_1(class="form-control", placeholder="1",type="number", id="repl_param_1") }}
+      </div>
+      <div style="margin-left: 5px; width:40%; float:left; ">
+        {{ form.repl_param_2(class="form-control", placeholder="2",type="number", id="repl_param_2", disabled="disabled") }}
+      </div>
+      <div style="clear:both"></div>
     </div>
   </div>
 </template>
@@ -231,60 +249,20 @@
 <template id="taller-template">
   <div class="form-group" style="overflow: hidden;">
     <div style="width: 120px; float: left;">
-      {{ form.work_distr(class="form-control", type="text", id="work_distr") }}
+      {{ form.work_distr(class="form-control", type="text", id="work_distr",
+         onchange="javascript:updateParam(this)") }}
     </div>
     <div style="margin-left: 125px;">
-      {{ form.work_param(class="form-control", placeholder="Parámetros", type="number", id="work_param") }}
+      <div style="margin-left: 5px; width:40%; float:left;">
+        {{ form.work_param_1(class="form-control", placeholder="1",type="number", id="work_param_1") }}
+      </div>
+      <div style="margin-left: 5px; width:40%; float:left; ">
+        {{ form.work_param_2(class="form-control", placeholder="2",type="number", id="work_param_2", disabled="disabled") }}
+      </div>
+      <div style="clear:both"></div>
     </div>
   </div>
 </template>
 
-<!-- {% for message in form.sim_name.errors %}
-  <div class="flash"> sim_name{{ message }}</div>
-{% endfor %}
-{% for message in form.replications.errors %}
-  <div class="flash"> replications{{ message }}</div>
-{% endfor %}
-{% for message in form.simulation_horizon.errors %}
-  <div class="flash"> simulation_horizon{{ message }}</div>
-{% endfor %}
-{% for message in form.trucks_amount.errors %}
-  <div class="flash">trucks_amount{{ message }}</div>
-{% endfor %}
-{% for message in form.trucks_use.errors %}
-  <div class="flash"> trucks_use{{ message }}</div>
-{% endfor %}
-{% for message in form.workshop_capacity.errors %}
-  <div class="flash"> workshop_capacity{{ message }}</div>
-{% endfor %}
-{% for message in form.components.errors %}
-  <div class="flash"> components{{ message }}</div>
-{% endfor %}
-{% for message in form.component_name.errors %}
-  <div class="flash"> component_name{{ message }}</div>
-{% endfor %}
-{% for message in form.failure_distr.errors %}
-  <div class="flash"> failure_distr{{ message }}</div>
-{% endfor %}
-{% for message in form.failure_param.errors %}
-  <div class="flash"> failure_param{{ message }}</div>
-{% endfor %}
-{% for message in form.initial_stock.errors %}
-  <div class="flash"> initial_stock{{ message }}</div>
-{% endfor %}
-{% for message in form.work_distr.errors %}
-  <div class="flash"> work_distr{{ message }}</div>
-{% endfor %}
-{% for message in form.work_param.errors %}
-  <div class="flash"> work_param{{ message }}</div>
-{% endfor %}
-{% for message in form.repl_distr.errors %}
-  <div class="flash"> repl_distr{{ message }}</div>
-{% endfor %}
-{% for message in form.repl_param.errors %}
-  <div class="flash"> repl_param{{ message }}</div>
-{% endfor %}
-
- -->
  </div>
 {% endblock %}

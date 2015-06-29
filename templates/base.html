@@ -45,7 +45,6 @@
                 taller.innerHTML = "";
             }
 
-            // Append a node with a random text
             var tmpl = document.getElementById('componente-template');
             componente.appendChild(tmpl.content.cloneNode(true));
 
@@ -79,52 +78,82 @@
                 name = "component_name_"+i;
                 var c_name = document.getElementById('component_name');
                 c_name.innerHTML = "";
-                c_name.setAttribute('id', name);
                 c_name.setAttribute('name', name);
+                c_name.setAttribute('id', name);
 
                 name = "failure_distr_"+i;
                 var f_distr = document.getElementById('failure_distr');
-                f_distr.setAttribute('id', name);
                 f_distr.setAttribute('name', name);
+                f_distr.setAttribute('id', name);
 
-                name = "failure_param_"+i;
-                var f_param = document.getElementById('failure_param');
+                name = "failure_param_1_"+i;
+                var f_param = document.getElementById('failure_param_1');
                 f_param.innerHTML = "";
-                f_param.setAttribute('id', name);
                 f_param.setAttribute('name', name);
+                f_param.setAttribute('id', name);
+
+                name = "failure_param_2_"+i;
+                var f_param = document.getElementById('failure_param_2');
+                f_param.innerHTML = "";
+                f_param.setAttribute('name', name);
+                f_param.setAttribute('id', name);
 
                 name = "initial_stock_"+i;
                 var i_stock = document.getElementById('initial_stock');
                 i_stock.innerHTML = "";
-                i_stock.setAttribute('id', name);
                 i_stock.setAttribute('name', name);
+                i_stock.setAttribute('id', name);
                 
                 name = "work_distr_"+i;
                 var w_distr = document.getElementById('work_distr');
-                w_distr.setAttribute('id', name);
                 w_distr.setAttribute('name', name);
+                w_distr.setAttribute('id', name);
 
-                name = "work_param_"+i;
-                var w_param = document.getElementById('work_param');
+                name = "work_param_1_"+i;
+                var w_param = document.getElementById('work_param_1');
                 w_param.innerHTML = "";
-                w_param.setAttribute('id', name);
                 w_param.setAttribute('name', name);
+                w_param.setAttribute('id', name);
+
+                name = "work_param_2_"+i;
+                var w_param = document.getElementById('work_param_2');
+                w_param.innerHTML = "";
+                w_param.setAttribute('name', name);
+                w_param.setAttribute('id', name);
 
                 name = "repl_distr_"+i;
                 var r_distr = document.getElementById('repl_distr');
-                r_distr.setAttribute('id', name);
                 r_distr.setAttribute('name', name);
+                r_distr.setAttribute('id', name);
 
-                name = "repl_param_"+i;
-                var r_param = document.getElementById('repl_param');
+                name = "repl_param_1_"+i;
+                var r_param = document.getElementById('repl_param_1');
                 r_param.innerHTML = "";
-                r_param.setAttribute('id', name);
                 r_param.setAttribute('name', name);
+                r_param.setAttribute('id', name);
+
+                name = "repl_param_2_"+i;
+                var r_param = document.getElementById('repl_param_2');
+                r_param.innerHTML = "";
+                r_param.setAttribute('name', name);
+                r_param.setAttribute('id', name);
 
                 
             }
         }
 
+    function updateParam(elem){
+        if(elem.value == "normal" || 
+           elem.value == "uniform" || 
+           elem.value == "binomial" || 
+           elem.value == "gamma" || 
+           elem.value == "beta" || 
+           elem.value == "lognormal"){
+            elem.parentNode.nextElementSibling.children[1].firstElementChild.disabled = false;
+           }else{
+            elem.parentNode.nextElementSibling.children[1].firstElementChild.disabled = true;
+        }
+    }
     </script>
 
   </head>

@@ -73,6 +73,7 @@ def form():
   username = session['username']
   if request.method == 'POST' and form.validate():
       data = request.form
+      print (data)
 
       replications = int(data['replications'])
       total_trucks = int(data['trucks_amount'])
@@ -91,29 +92,52 @@ def form():
           aux_comp_name = data['component_name']
           comp_names.append(aux_comp_name)
 
-          aux = [data['failure_distr'], [int(data['failure_param'])]]
+          p1 = int(data['failure_param_1'])
+          p2 = 0
+          if 'failure_param_2' in data:
+            p2 = int(data['failure_param_2'])
+          aux = [data['failure_distr'], [p1,p2]]
           life_dist_parameters.append(aux)
 
-          aux = [data['work_distr'], [int(data['work_param'])]]
+          p1 = int(data['work_param_1'])
+          p2 = 0
+          if 'work_param_2' in data:
+            p2 = int(data['work_param_2'])
+          aux = [data['work_distr'], [p1,p2]]
           repair_dist_parameters.append(aux)
 
-          aux = [data['repl_distr'], [int(data['repl_param'])]]
+          p1 = int(data['repl_param_1'])
+          p2 = 0
+          if 'repl_param_2' in data:
+            p2 = int(data['repl_param_2'])
+          aux = [data['repl_distr'], [p1,p2]]
           replacement_dist_parameters.append(aux)
 
           aux = int(data['initial_stock'])
           start_inventory.append(aux)
-
         if i > 0:
           aux_comp_name = data['component_name_'+str(i)]
           comp_names.append(aux_comp_name)
 
-          aux = [data['failure_distr_'+str(i)], [int(data['failure_param_'+str(i)])]]
+          p1 = int(data['failure_param_1_'+str(i)])
+          p2 = 0
+          if 'failure_param_2_'+str(i) in data:
+            p2 = int(data['failure_param_2_'+str(i)])
+          aux = [data['failure_distr_'+str(i)], [p1,p2]]
           life_dist_parameters.append(aux)
 
-          aux = [data['work_distr_'+str(i)], [int(data['work_param_'+str(i)])]]
+          p1 = int(data['work_param_1_'+str(i)])
+          p2 = 0
+          if 'work_param_2_'+str(i) in data:
+            p2 = int(data['work_param_2_'+str(i)])
+          aux = [data['work_distr_'+str(i)], [p1,p2]]
           repair_dist_parameters.append(aux)
 
-          aux = [data['repl_distr_'+str(i)], [int(data['repl_param_'+str(i)])]]
+          p1 = int(data['repl_param_1_'+str(i)])
+          p2 = 0
+          if 'repl_param_2_'+str(i) in data:
+            p2 = int(data['repl_param_2_'+str(i)])
+          aux = [data['repl_distr_'+str(i)], [p1,p2]]
           replacement_dist_parameters.append(aux)
 
           aux = int(data['initial_stock_'+str(i)])
