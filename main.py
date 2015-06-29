@@ -1,7 +1,7 @@
 import os.path
 import json
 import sys
-# sys.stdout = open(os.devnull, "w") # Stops Python from printing stuff on console
+sys.stdout = open(os.devnull, "w") # Stops Python from printing stuff on console
 import unicodedata
 from string import ascii_letters
 
@@ -363,7 +363,7 @@ def results4():
     return render_template('no_results.html', title='No hay resultados')
 
 if __name__ == "__main__":
-  app.debug = True # NOT IN PRODUCTION
+  # app.debug = True # NOT IN PRODUCTION
   app.config.from_object('config')
 
   app.run()
