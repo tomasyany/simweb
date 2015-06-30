@@ -184,9 +184,47 @@
         </div>
       </div>
     </nav>
-    <div class="wrap">
+
+    <div class="column-left">
+    {% if  request.path == "/results2" %}
+        <a href="/results1"><span class="glyphicon glyphicon-chevron-left btn-lg" aria-hidden="true">
+          RESULTADOS 1
+          </span>
+        </a>
+    {% endif %}
+    {% if  request.path == "/results3" %}
+        <a href="/results2"><span class="glyphicon glyphicon-chevron-left btn-lg" aria-hidden="true">
+          RESULTADOS 2
+        </a>
+    {% endif %}
+    {% if  request.path == "/results4" %}
+        <a href="/results3"><span class="glyphicon glyphicon-chevron-left btn-lg" aria-hidden="true">
+          RESULTADOS 3
+        </a>
+    {% endif %}
+    </div>
+
+    <div class="wrap column-center">
         {% block content %}
         {% endblock %}
+    </div>
+
+    <div class="column-right">
+    {% if  request.path == "/results1" %}
+        <a href="/results2"><span class="glyphicon glyphicon-chevron-right btn-lg" aria-hidden="true">
+          RESULTADOS 2
+        </a>
+    {% endif %}
+    {% if  request.path == "/results2" %}
+        <a href="/results3"><span class="glyphicon glyphicon-chevron-right btn-lg" aria-hidden="true">
+          RESULTADOS 3
+        </a>
+    {% endif %}
+    {% if  request.path == "/results3" %}
+        <a href="/results4"><span class="glyphicon glyphicon-chevron-right btn-lg" aria-hidden="true">
+          RESULTADOS 4
+        </a>
+    {% endif %}
     </div>
     <footer>
     <div>

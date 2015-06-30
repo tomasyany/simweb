@@ -16,9 +16,6 @@
   width:10%;
 }
 
-/*.form-inline{
-  padding-bottom: 1em;
-}*/
 
 .glyphicon.glyphicon-home {
     font-size: 25px;
@@ -89,5 +86,20 @@ table tr td,th{
 }
 
 #loading{
-  display: none;
+  display: none;-
+}
+
+.column-left{ float: left; width: 8%; min-height:1px; }
+.column-right{ float: right; width: 8%; min-height:1px;}
+.column-center{ display: inline-block; width: 84%; }
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.center2 {
+    margin-left: auto;
+    margin-right: auto;
 }
