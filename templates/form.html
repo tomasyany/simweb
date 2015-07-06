@@ -21,7 +21,7 @@ window.onload = addFields;
 
     <div class="form-group">
       <div style="float: left; width: 89%;">
-        {{ form.sim_name(class_="form-control", placeholder="Nombre simulación", type="text")  }}
+        {{ form.sim_name(class_="form-control", placeholder="Nombre", type="text")  }}
       </div>
       <div style="float: left; width: 10%;">
         <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Nombre de la simulación" data-content="Elija un nombre para esta configuración. Ej. Escenario optimista">
@@ -33,7 +33,7 @@ window.onload = addFields;
 
     <div class="form-group">
       <div style="float: left; width: 89%;">
-        {{ form.replications(class_="form-control", placeholder="Cantidad de réplicas", type="number")  }}
+        {{ form.replications(class_="form-control", placeholder="Réplicas", type="number")  }}
       </div>
       <div style="float: left; width: 10%;">
         <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Cantidad de réplicas" data-content="Indique cuántas réplicas desea hacer. Debe ser un número mayor o igual a 1. Ej. 50">
@@ -107,10 +107,10 @@ window.onload = addFields;
   
   <div class="bigWidth" style="float:right;">
 
-    <div class="settings" style="width:15%; float:left; padding-right: 8px;">
+    <div class="settings" style="width:14%; float:left; padding-right: 8px;">
       <div>
         <div style="float: left; width: 89%;">
-          <h3 style="text-align: center; overflow:hidden">Componente</h3>
+          <h3 style="text-align: center; overflow:hidden">ID</h3>
         </div>
         <div style="float: left; width: 10%; padding-top: 15px">
             <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Nombre de los componentes" data-content="Indique el nombre de cada uno de los componentes. Ej. Motor">
@@ -123,7 +123,7 @@ window.onload = addFields;
       </div>
     </div>
 
-    <div class="settings" style="float:left; padding-right: 8px;">
+    <div class="settings" style="float:left; padding-right: 8px; width:25%">
       <div>
         <div style="float: left; width: 89%;">
           <h3 style="text-align: center; overflow:hidden">Fallas</h3>
@@ -139,7 +139,7 @@ window.onload = addFields;
       </div>
     </div>
 
-    <div class="settings" style="padding-right: 8px;">
+    <div class="settings" style="padding-right: 8px; width:25%">
       <div>
         <div style="float: left; width: 89%;">
           <h3 style="text-align: center; overflow:hidden">Reposición</h3>
@@ -155,10 +155,10 @@ window.onload = addFields;
       </div>
     </div>
 
-    <div class="settings" style="width:15%; padding-right: 8px;">
+    <div class="settings" style="width:10%; padding-right: 20px;">
       <div>
         <div style="float: left; width: 89%;">
-          <h3 style="text-align: center; overflow:hidden">Inventario</h3>
+          <h3 style="text-align: center; overflow:hidden">Stock</h3>
         </div>
         <div style="float: left; width: 10%; padding-top: 15px">
             <a style="height: 34px;" tabindex="0" class="btn btn-xs alert-info" role="button" data-toggle="popover" data-trigger="focus" data-placement="right" title="Inventario inicial" data-content="Indique los inventarios iniciales para cada componente. Ej. 15">
@@ -171,7 +171,7 @@ window.onload = addFields;
       </div>
     </div>
 
-    <div class="settings" >
+    <div class="settings" style="width:25%">
       <div>
         <div style="float: left; width: 89%;">
           <h3 style="text-align: center; overflow:hidden">Reparación</h3>
@@ -242,7 +242,7 @@ window.onload = addFields;
 
 <template id="inventario-template">
   <div class="form-group">
-    {{ form.initial_stock(class="form-control", placeholder="Stock inicial", type="number", id="initial_stock") }}
+    {{ form.initial_stock(class="form-control", placeholder="Inicial", type="number", id="initial_stock") }}
   </div>
 </template>
 

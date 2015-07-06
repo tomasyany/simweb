@@ -89,9 +89,9 @@ table tr td,th{
   display: none;-
 }
 
-.column-left{ float: left; width: 8%; min-height:1px; }
-.column-right{ float: right; width: 8%; min-height:1px;}
-.column-center{ display: inline-block; width: 84%; }
+.column-left{ float: left; width: 5%; min-height:1px; }
+.column-right{ float: right; width: 5%; min-height:1px;}
+.column-center{ display: inline-block; width: 90%; }
 
 .center {
     margin-left: auto;
