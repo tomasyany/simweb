@@ -16,7 +16,7 @@ class Simulation(object):
                  workshop_capacity, n_components, comp_names,
                  life_dist_parameters, repair_dist_parameters,
                  replacement_dist_parameters, start_inventory,
-                 simulation_horizon, username, mon_step=24*7):
+                 simulation_horizon, username, mon_step=7):
         """
         :param replications: the number of replications
         :param total_trucks: the total amount of trucks
